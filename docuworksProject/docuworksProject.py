@@ -1,10 +1,12 @@
+from tkinter import Toplevel
 import click
 import sys
 import re
+from collections import Counter
 
 @click.command()
 def main():
-    txtFile = open("text.txt", "r")
+    txtFile = click.open_file("text.txt", "r")
     text = txtFile.read()
     txtFile.close()
     click.clear()
@@ -30,6 +32,8 @@ def main():
         search(text)
     elif option == '3':
         replace(text)
+    elif option == '4':
+        commonWords(text)
     elif option == '8':
         sys.exit()
     else:
@@ -79,7 +83,7 @@ def replace(txt):
         if option == 'y':
             name = input("Please enter the file name: ")
             name = name + ".txt"
-            with open(name, 'w') as newFile:
+            with click.open_file(name, 'w') as newFile:
                 newFile.seek(0)
                 newFile.write(txt)
                 newFile.truncate()
@@ -88,6 +92,24 @@ def replace(txt):
         click.echo("Would you like to try again? y/n\n")
         option = click.getchar()
 
+def commonWords(txt):
+    '''Finds the most commonly used words in the text.'''
+    option = 'y'
+    while option == 'y':
+        toplimit = input("How many of the most used words should be shown?: ")
+        try:
+            int(toplimit)
+        except:
+            click.echo("Please enter a valid number.")
+        else:
+            words = txt.split(" ")
+            words_count = Counter(words).most_common()
+            click.echo(f"Most frequent word used is: {words_count[0][0]} with {words_count[0][1]} occurrences.")
+            click.pause()
+
+            click.clear()
+            click.echo("Would you like to try again? y/n\n")
+            option = click.getchar()
 
 
 if __name__ == "__main__":
