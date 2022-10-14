@@ -3,12 +3,38 @@ import click
 import sys
 import re
 from collections import Counter
+from abc import ABC, abstractmethod
+from pathlib import Path
+
+class TextProcessor(ABC):
+    @abstractmethod
+    def load(self, path: Path) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def display(self) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def save(self, path: Path) -> None:
+        raise NotImplementedError
+
+class MyTextProcessor(TextProcessor):
+    def load(self, path):
+        with click.open_file(path, "r") as file:
+            self.text = file.read()
+
+    def display(self):
+        click.echo(self.text)
+
+    def save(self, path):
+        click.echo("test")
 
 @click.command()
 def main():
     txtFile = click.open_file("text.txt", "r")
     text = txtFile.read()
-    txtFile.close()
+
     click.clear()
     click.echo("DocuWorks Assessment Text Editor\n")
 
@@ -43,7 +69,10 @@ def main():
     
 
 def display(txt):
-    click.echo(txt)
+    app = MyTextProcessor()
+    app.load(Path(r"text.txt"))
+    app.display()
+    click.pause()
     
 
 def search(txt):
