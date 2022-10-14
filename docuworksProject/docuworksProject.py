@@ -1,5 +1,3 @@
-from json import load
-from tkinter import Toplevel
 import click
 import sys
 import re
