@@ -16,11 +16,15 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def save(self, path: Path, txt) -> None:
+    def iterSearch(self, searchPhrase) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def iterSearch(self, searchPhrase) -> None:
+    def replace(self, searchStr, replaceStr) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def save(self, path: Path) -> None:
         raise NotImplementedError
 
 class MyTextProcessor(TextProcessor):
@@ -31,12 +35,6 @@ class MyTextProcessor(TextProcessor):
     def display(self):
         click.echo(self.text)
 
-    def save(self, path, newText):
-        with click.open_file(path, 'w') as newFile:
-                newFile.seek(0)
-                newFile.write(newText)
-                newFile.truncate()
-
     def iterSearch(self, searchPhrase):
         result = re.finditer(searchPhrase, self.text)
 
@@ -46,8 +44,20 @@ class MyTextProcessor(TextProcessor):
             click.echo(indices)
         else:
             click.echo("No results found.")
+    
+    def replace(self, searchStr, replaceStr):
+        self.newTxt = re.sub(searchStr, replaceStr, self.text)
 
-@click.group()
+        click.echo(f"New text: \n{self.newTxt}")
+
+    def save(self, path):
+        with click.open_file(path, 'w') as newFile:
+                newFile.seek(0)
+                newFile.write(self.newTxt)
+                newFile.truncate()
+
+
+@click.command()
 def main():
     click.clear()
     click.echo("DocuWorks Assessment Text Editor\n")
@@ -79,20 +89,20 @@ def main():
     else:
         click.echo('Invalid.')
         main()
-    main()
     
-@main.command()
+@click.command()
 def display():
     app = MyTextProcessor()
     app.load(Path(r"text.txt"))
     app.display()
     click.pause()
     
-@main.command()
+@click.command()
 def search():
     '''Searches through the text using a user input string and outputs index.'''
     option = 'y'
     while option == 'y':
+        click.clear()
         search = input("Please provide an input string for searching: ")
 
         app = MyTextProcessor()
@@ -103,19 +113,21 @@ def search():
         click.echo("\nWould you like to try again? y/n\n")
         option = click.getchar()
 
+@click.command()
 def replace():
     '''Searches through the text using a user input string and replaces text'''
     option = 'y'
     while option == 'y':
         # Initalize new text object for replaced text
-        newtxt = 'replaced'
+        newTxt = 'replaced'
         click.clear()
 
         search = input("Please provide an input string for searching: ")
         replace = input("Please provide an input string for replacing: ")
 
-        txt = re.sub(search, replace, txt)
-        click.echo(f"New text: \n{txt}")
+        app = MyTextProcessor()
+        app.load(Path(r"text.txt"))
+        app.replace(search, replace)
 
         click.echo("\nDo you want to save the edited file as a new file? y/n: ")
         option = click.getchar()
@@ -123,15 +135,14 @@ def replace():
         if option == 'y':
             name = input("Please enter the file name: ")
             name = name + ".txt"
-            with click.open_file(name, 'w') as newFile:
-                newFile.seek(0)
-                newFile.write(txt)
-                newFile.truncate()
+            
+            app.save(Path(name))
         
         click.clear()
         click.echo("Would you like to try again? y/n\n")
         option = click.getchar()
 
+@click.command()
 def commonWords():
     '''Finds the most commonly used words in the text.'''
     option = 'y'
