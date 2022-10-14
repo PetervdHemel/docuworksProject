@@ -16,7 +16,11 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def save(self, path: Path) -> None:
+    def save(self, path: Path, txt) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def iterSearch(self, searchPhrase) -> None:
         raise NotImplementedError
 
 class MyTextProcessor(TextProcessor):
@@ -27,14 +31,24 @@ class MyTextProcessor(TextProcessor):
     def display(self):
         click.echo(self.text)
 
-    def save(self, path):
-        click.echo("test")
+    def save(self, path, newText):
+        with click.open_file(path, 'w') as newFile:
+                newFile.seek(0)
+                newFile.write(newText)
+                newFile.truncate()
 
-@click.command()
+    def iterSearch(self, searchPhrase):
+        result = re.finditer(searchPhrase, self.text)
+
+        if result != None:
+            click.echo("Index of found searched phrase:")
+            indices = [index.start() for index in result]
+            click.echo(indices)
+        else:
+            click.echo("No results found.")
+
+@click.group()
 def main():
-    txtFile = click.open_file("text.txt", "r")
-    text = txtFile.read()
-
     click.clear()
     click.echo("DocuWorks Assessment Text Editor\n")
 
@@ -53,13 +67,13 @@ def main():
 
     # Process input character
     if option == '1':
-        display(text)
+        display()
     elif option == '2':
-        search(text)
+        search()
     elif option == '3':
-        replace(text)
+        replace()
     elif option == '4':
-        commonWords(text)
+        commonWords()
     elif option == '8':
         sys.exit()
     else:
@@ -67,32 +81,29 @@ def main():
         main()
     main()
     
-
-def display(txt):
+@main.command()
+def display():
     app = MyTextProcessor()
     app.load(Path(r"text.txt"))
     app.display()
     click.pause()
     
-
-def search(txt):
+@main.command()
+def search():
     '''Searches through the text using a user input string and outputs index.'''
     option = 'y'
     while option == 'y':
         search = input("Please provide an input string for searching: ")
-        result = re.finditer(search, txt)
 
-        if result != None:
-            click.echo("Index of found searched phrase:")
-            indices = [index.start() for index in result]
-            click.echo(indices)
-        else:
-            click.echo("No results found.")
-        
+        app = MyTextProcessor()
+        app.load(Path(r"text.txt"))
+        app.iterSearch(search)
+
+       
         click.echo("\nWould you like to try again? y/n\n")
         option = click.getchar()
 
-def replace(txt):
+def replace():
     '''Searches through the text using a user input string and replaces text'''
     option = 'y'
     while option == 'y':
@@ -121,7 +132,7 @@ def replace(txt):
         click.echo("Would you like to try again? y/n\n")
         option = click.getchar()
 
-def commonWords(txt):
+def commonWords():
     '''Finds the most commonly used words in the text.'''
     option = 'y'
     while option == 'y':
