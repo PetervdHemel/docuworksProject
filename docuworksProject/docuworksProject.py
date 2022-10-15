@@ -1,9 +1,15 @@
+from tempfile import tempdir
 import click
 import sys
 import re
 from collections import Counter
 from abc import ABC, abstractmethod
 from pathlib import Path
+
+class NoPalindromesError(Exception):
+
+    def __str__(self):
+        return f'The processed string contains no palindromes.'
 
 class TextProcessor(ABC):
     @abstractmethod
@@ -28,6 +34,10 @@ class TextProcessor(ABC):
 
     @abstractmethod 
     def findCommon(self, limit) -> None:
+        raise NotImplementedError
+
+    @abstractmethod 
+    def findPalindromes(self) -> None:
         raise NotImplementedError
 
 class MyTextProcessor(TextProcessor):
@@ -61,13 +71,42 @@ class MyTextProcessor(TextProcessor):
                 newFile.truncate()
 
     def findCommon(self, limit):
-            '''Finds the most common words in text. 'limit' Is the amount of common words shown.'''
-            words = self.text.split(" ")
-            words_count = Counter(words).most_common()
-            for x in range(limit):
-                click.echo(f"Most frequent word place {x + 1} is: {words_count[x][0]} with {words_count[x][1]} occurrences.")
+        '''Finds the most common words in text. 'limit' Is the amount of common words shown.'''
+        words = self.text.split(" ")
+        words_count = Counter(words).most_common()
+        for x in range(limit):
+            click.echo(f"Most frequent word place {x + 1} is: {words_count[x][0]} with {words_count[x][1]} occurrences.")
 
-            click.pause()
+        click.pause()
+
+    def findPalindromes(self):
+        '''Iterates through text to find if the substring is equal to the reverse of the substring.'''
+        # Makes text lower case, removes spaces and removes newline which could be counted as a palindrome character
+        string = self.text.lower().replace(' ', '').replace('\n', '') 
+        stringLength = len(string)
+
+        # Empty list for storing palindromes
+        palindromes = []
+
+        ''' 
+        This code finds any palindromes in the extreme sense, as any word, phrase or letters of which can give the same result when reversed.
+        If the client only wants palindromes as words (which wasn't specified), I could instead add each word in text to a list using string slicing,
+        then loop through the list, comparing each entry to its inverted counterpart.
+        '''
+        with click.progressbar(length = stringLength) as bar: # Use click to provide a progress bar since the operation might take a while
+            for i in bar:
+                for j in range(i+1,stringLength+1):
+                    temp = string[i:j] # Use string slicing to slice each segment of text for comparison
+                    if len(temp) > 2:
+                        if temp == temp[::-1]: # Compare the sliced text to its inverted counterpart
+                           palindromes.append(temp) # Add the palindromes to list, useful for any future additions.
+
+        click.clear()
+        if palindromes == []: # Check if any palindromes were added to the list (if list is empty)
+            raise NoPalindromesError # Could also catch the error and print the exception instead of raising.
+            return ''
+        else:
+            return palindromes
 
 def loadApp():
     '''Calls text processor class and loads the class. Returns class.'''
@@ -103,10 +142,14 @@ def main():
         replace()
     elif option == '4':
         commonWords()
+    elif option == '5':
+        palindromes()
     elif option == '8':
         sys.exit()
     else:
-        click.echo('Invalid.')
+        click.clear()
+        click.echo('Invalid option.')
+        click.pause()
         main()
     
 @click.command()
@@ -179,6 +222,18 @@ def commonWords():
         click.echo("Would you like to try again? y/n\n")
         option = click.getchar()
 
+@click.command()
+def palindromes():
+    click.clear()
+    app = loadApp()
+
+    palindromes = app.findPalindromes()
+    click.echo(palindromes)
+    click.pause()
+
+def emails():
+    click.clear()
+    app = loadApp()
 
 if __name__ == "__main__":
     main()
