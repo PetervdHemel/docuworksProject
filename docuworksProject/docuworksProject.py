@@ -122,8 +122,45 @@ class MyTextProcessor(TextProcessor):
 
     def findSecret(self):
         '''Finds secret message in text'''
-        capitalwords = re.findall(r"[A-Z]*[a-z]+[A-Z]+[a-z]+", self.text)
-        click.echo(capitalwords)
+
+        # Find all words in text that have a capitalized letter surrounded by lower case letters.
+        capitalwords = re.findall(r"[a-z]+[A-Z]+[a-z]+", self.text)
+
+        # Use list comprehension to extract capitalized characters from strings in capitalwords
+        upper = []
+        for word in capitalwords: # loop through words in list
+            string = ''
+            string = [char for char in word if char.isupper()].pop() # nested loop through characters in word
+            upper.append(string)
+        
+        # Define the shift for caesar decryption
+        shift = 13 # His 'lucky number'
+        encryptedString = ''
+        encryptedString = encryptedString.join(upper)
+
+        # Print encrypted string for before/after comparison
+        click.echo(f"Encrypted Message: {encryptedString}")
+
+        decryptedString = ''
+
+        for char in encryptedString:
+            uni = ord(char) # Convert character to unicode
+            index = ord(char) - ord("A") # Find index position 0-25
+
+            # Perform shift
+            new_index = (index - shift) % 26
+
+            # Convert back
+            new_uni = new_index + ord("A")
+
+            new_char = chr(new_uni)
+
+            # Add to string
+            decryptedString += new_char
+
+        click.echo(f"Secret Message: {decryptedString}")
+        
+        
 
 def loadApp():
     '''Calls text processor class and loads the class. Returns class.'''
