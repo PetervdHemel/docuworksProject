@@ -1,4 +1,3 @@
-from tempfile import tempdir
 import click
 import sys
 import re
@@ -108,6 +107,15 @@ class MyTextProcessor(TextProcessor):
         else:
             return palindromes
 
+    def findEmails(self):
+        '''
+        Uses regular expressions (regex) to extract emails from text. 
+        Regex lookahead to make sure the sneakily placed fake emails are avoided:
+        '[\.(?!\.)]' | Lookahead to see if a period is not followed by another period.
+        '''
+        emails = re.findall(r"[a-z0-9\-+_]+[\.(?!\.)]*[a-z0-9\-+_]+@[a-z0-9\-+_]+[\.(?=\.)]*[a-z]+[a-z\.]*", self.text)
+        click.echo(emails)
+
 def loadApp():
     '''Calls text processor class and loads the class. Returns class.'''
     app = MyTextProcessor()
@@ -144,6 +152,8 @@ def main():
         commonWords()
     elif option == '5':
         palindromes()
+    elif option == '6':
+        emails()
     elif option == '8':
         sys.exit()
     else:
@@ -234,6 +244,8 @@ def palindromes():
 def emails():
     click.clear()
     app = loadApp()
+
+    app.findEmails()
 
 if __name__ == "__main__":
     main()
