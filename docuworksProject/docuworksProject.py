@@ -10,6 +10,11 @@ class NoPalindromesError(Exception):
     def __str__(self):
         return f'The processed string contains no palindromes.'
 
+class NoEmailAddressesError(Exception):
+
+    def __str__(self):
+        return f'The processed string contains no email addresses.'
+
 class TextProcessor(ABC):
     @abstractmethod
     def load(self, path: Path) -> None:
@@ -107,7 +112,6 @@ class MyTextProcessor(TextProcessor):
         click.clear()
         if palindromes == []: # Check if any palindromes were added to the list (if list is empty)
             raise NoPalindromesError # Could also catch the error and print the exception instead of raising.
-            return ''
         else:
             return palindromes
 
@@ -118,7 +122,10 @@ class MyTextProcessor(TextProcessor):
         '[\.(?!\.)]' | Lookahead to see if a period is not followed by another period.
         '''
         emails = re.findall(r"[a-z0-9\-+_]+[\.(?!\.)]*[a-z0-9\-+_]+@[a-z0-9\-+_]+[\.(?=\.)]*[a-z]+[a-z\.]*", self.text)
-        click.echo(emails)
+        if emails == []:
+            raise NoEmailAddressesError
+        else:
+            click.echo(emails)
 
     def findSecret(self):
         '''Finds secret message in text'''
