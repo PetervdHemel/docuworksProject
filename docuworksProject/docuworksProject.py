@@ -145,7 +145,7 @@ class MyTextProcessor(TextProcessor):
 
         for char in encryptedString:
             uni = ord(char) # Convert character to unicode
-            index = ord(char) - ord("A") # Find index position 0-25
+            index = uni - ord("A") # Find index position 0-25
 
             # Perform shift
             new_index = (index - shift) % 26
