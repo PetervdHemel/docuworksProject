@@ -39,6 +39,10 @@ class TextProcessor(ABC):
     def findPalindromes(self) -> None:
         raise NotImplementedError
 
+    @abstractmethod 
+    def findSecret(self) -> None:
+        raise NotImplementedError
+
 class MyTextProcessor(TextProcessor):
     def load(self, path):
         with click.open_file(path, "r") as file:
@@ -116,6 +120,11 @@ class MyTextProcessor(TextProcessor):
         emails = re.findall(r"[a-z0-9\-+_]+[\.(?!\.)]*[a-z0-9\-+_]+@[a-z0-9\-+_]+[\.(?=\.)]*[a-z]+[a-z\.]*", self.text)
         click.echo(emails)
 
+    def findSecret(self):
+        '''Finds secret message in text'''
+        capitalwords = re.findall(r"[A-Z]*[a-z]+[A-Z]+[a-z]+", self.text)
+        click.echo(capitalwords)
+
 def loadApp():
     '''Calls text processor class and loads the class. Returns class.'''
     app = MyTextProcessor()
@@ -154,6 +163,8 @@ def main():
         palindromes()
     elif option == '6':
         emails()
+    elif option == '7':
+        secret()
     elif option == '8':
         sys.exit()
     else:
@@ -246,6 +257,14 @@ def emails():
     app = loadApp()
 
     app.findEmails()
+
+def secret():
+    click.clear()
+    app = loadApp()
+
+    app.findSecret()
+    click.pause()
+   
 
 if __name__ == "__main__":
     main()
