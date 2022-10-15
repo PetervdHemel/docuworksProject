@@ -289,12 +289,14 @@ def palindromes():
     click.echo(palindromes)
     click.pause()
 
+@click.command()
 def emails():
     click.clear()
     app = loadApp()
 
     app.findEmails()
 
+@click.command()
 def secret():
     click.clear()
     app = loadApp()
