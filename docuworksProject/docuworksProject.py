@@ -63,14 +63,14 @@ class MyTextProcessor(TextProcessor):
             searchPhrase, self.text
         )  # Iteratively searches phrase using regex
 
-        if result != None:
-            click.secho("Index of found searched phrase:", fg="white", bg="black")
-            indices = [
-                index.start() for index in result
-            ]  # Creates a list of indices for each index in result
-            click.echo(indices)
+
+        indices =  [(index.start(), index.end() - 1) for index in result] # Creates a list of indices for each index in result
+        if indices == []:
+            click.echo("None found.")
         else:
-            click.echo("No results found.")
+            click.secho(f"Start, stop indices of {searchPhrase}:", fg="white", bg="black")
+            click.echo(indices)
+            
 
     def replace(self, searchStr, replaceStr):
         # Initalize new text object for replaced text
