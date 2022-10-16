@@ -118,7 +118,13 @@ class MyTextProcessor(TextProcessor):
         """Iterates through text to find if the substring is equal to the reverse of the substring."""
         # Makes text lower case, removes spaces and removes newline which could be counted as a palindrome character
         string = self.text.lower().replace(" ", "").replace("\n", "")
+        
+        
+        # Get rid of punctuation
+        string = re.sub(r"[^\w\s]", "", string)
+
         stringLength = len(string)
+
 
         # Empty list for storing palindromes
         palindromes = []
