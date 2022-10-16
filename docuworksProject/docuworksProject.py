@@ -95,7 +95,7 @@ class MyTextProcessor(TextProcessor):
 
         click.pause()
 
-    def findPalindromes(self):
+    def findPalindromes(self) -> list:
         """Iterates through text to find if the substring is equal to the reverse of the substring."""
         # Makes text lower case, removes spaces and removes newline which could be counted as a palindrome character
         string = self.text.lower().replace(" ", "").replace("\n", "")
@@ -124,11 +124,11 @@ class MyTextProcessor(TextProcessor):
                             palindromes.append(
                                 temp
                             )  # Add the palindromes to list, useful for any future additions.
-
+                            
         click.clear()
         if (
             palindromes == []
-        ):  # Check if any palindromes were added to the list (if list is empty)
+        ):  # Check if any palindromes were added to the list
             raise NoPalindromesError  # Could also catch the error and print the exception instead of raising.
         else:
             return palindromes
@@ -137,7 +137,6 @@ class MyTextProcessor(TextProcessor):
         """
         Uses regular expressions (regex) to extract emails from text.
         Regex lookahead to make sure the sneakily placed fake emails are avoided:
-        '[\.(?!\.)]' | Lookahead to see if a period is not followed by another period.
         """
         emails = re.findall(
             r"[a-z0-9\-+_]+[\.(?!\.)]*[a-z0-9\-+_]+@[a-z0-9\-+_]+[\.(?=\.)]*[a-z]+[a-z\.]*",
@@ -191,7 +190,7 @@ class MyTextProcessor(TextProcessor):
         click.echo(f"Secret Message: {decryptedString}")
 
 
-def loadApp():
+def loadApp() -> MyTextProcessor:
     """Calls text processor class and loads the class. Returns class."""
     app = MyTextProcessor()
     app.load(Path(r"text.txt"))
