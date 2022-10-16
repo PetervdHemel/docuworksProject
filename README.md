@@ -83,13 +83,13 @@ Calls ```TextProcessor(ABC)``` abstract class.
 
 ---
 ```
-load(self, path):
+def load(self, path):
 ```
 Opens the text file under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on.
 
 ---
 ```
-display(self):
+def display(self):
 ```
 Simply prints the ```self.text``` string:
 ```
@@ -97,7 +97,7 @@ click.echo(self.text)
 ```
 ---
 ```
-iterSearch(self, searchPhrase):
+def iterSearch(self, searchPhrase):
 ```
 Uses ```import re``` function ```finditer``` to iteratively search through the ```self.text``` string using ```searchPhrase``` and stores it in ```result```:
 ```        
@@ -116,7 +116,7 @@ after which the indices are printed.
 
 ---
 ```
-replace(self, searchStr, replaceStr):
+def replace(self, searchStr, replaceStr):
 ```
 Makes use of ```import re``` function ```sub``` to substitute (replace) ```self.text``` substrings ```searchStr``` with ```replaceStr``` and then prints the new text:
 
@@ -125,7 +125,7 @@ newTxt = re.sub(searchStr, replaceStr, self.text)
 ```
 ---
 ```
-save(self, path):
+def save(self, path):
 ```
 Can be called to open a file as 'write' ```"w"``` following ```path``` input:
 ```
@@ -137,7 +137,7 @@ It makes sure to write at the beginning of the file, regardless of if it is a ne
 
 ---
 ```
-findCommon(self, limit):
+def findCommon(self, limit):
 ```
 Is used to find the most common words in the text, ranked by ```limit``` set by the user input.
 ```
@@ -147,7 +147,7 @@ Splits the entire text string into a list, where each word is a list item. This 
 ```
 words_count = Counter(words).most_common()
 ```
-```Counter``` is used from the ```collections``` [module](https://docs.python.org/3/library/collections.html#collections.Counter) to create a dictionary ```words_count``` with their key as popularity, value as number of occurrences. These are then printed:
+```Counter()``` is used from the ```collections``` [module](https://docs.python.org/3/library/collections.html#collections.Counter) to create a [dictionary](https://docs.python.org/3/glossary.html#term-dictionary) ```words_count``` with their *key* as popularity, *value* as number of occurrences. These are then printed:
 ```
 for x in range(limit):
     click.echo(
@@ -157,16 +157,60 @@ for x in range(limit):
 
 ---
 ```
-findPalindromes(self) -> list:
+def findPalindromes(self) -> list:
+```
+This function makes extensive use of substrings and string slicing to compare every substring of ```this.text``` to its inverted counterpart.
+> To clarify, This function finds any palindromes in the extreme sense, as any word, phrase or letters of which can give the same result when reversed.
+If the client only wants palindromes as words (which wasn't specified), instead each word in text could be added to a list using string slicing,
+then loop through the list, comparing each entry to its inverted counterpart.
+
+Firstly the text is converted to lower case and has its spaces and its newlines ```"\n"``` removed as they will interfere with processing palindromes:
+```
+string = self.text.lower().replace(" ", "").replace("\n", "")
+```
+By which
+```
+stringLength = len(string)
+```
+makes sure we know how many times to loop through the entirety of the text. We also make sure to store the palindromes found in a list aptly named ```palindromes```
+
+We will use the ```click``` module to provide a ```progressbar``` as this loop might take a while to complete, depending on the length of the text given:
+```
+with click.progressbar(
+    length=stringLength
+    ) as bar:
+```
+Now we use the ```stringLength``` variable to loop through the entire text, slicing each segment and comparing it to its inverse. The inverse of the substring is ```[::-1]```. Since we are doing temporary comparisons and storing the palindrome in a list, we use a ```temp``` variable to store strings:
+```
+for i in bar:
+    for j in range(i + 1, stringLength + 1):
+        temp = string[
+            i:j
+        ]
+        if len(temp) > 2:
+            if (
+                temp == temp[::-1]
+            ):
+```
+> ```i in bar``` is used instead of ```i in stringLength``` because we are using ```click``` to create a ```progressbar```
+
+Finally we check if any palindromes were found, raise a ```NoPalindromesError``` if not, else ```return``` them to be printed:
+```
+if (
+    palindromes == []
+):
+    raise NoPalindromesError 
+else:
+    return palindromes
 ```
 
 ---
 ```
-findEmails(self):
+def findEmails(self):
 ```
 
 ---
 ```
-findSecret(self):
+def findSecret(self):
 ```
 ---

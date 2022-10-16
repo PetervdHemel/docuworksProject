@@ -104,11 +104,6 @@ class MyTextProcessor(TextProcessor):
         # Empty list for storing palindromes
         palindromes = []
 
-        """ 
-        This code finds any palindromes in the extreme sense, as any word, phrase or letters of which can give the same result when reversed.
-        If the client only wants palindromes as words (which wasn't specified), I could instead add each word in text to a list using string slicing,
-        then loop through the list, comparing each entry to its inverted counterpart.
-        """
         with click.progressbar(
             length=stringLength
         ) as bar:  # Use click to provide a progress bar since the operation might take a while
