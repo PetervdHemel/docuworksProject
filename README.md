@@ -63,8 +63,8 @@ These exceptions are raised in the ```MyTextProcessor``` class under ```findPali
 As an example, both palindromes and emails are checked as an empty list:
 ```
 if (
-            palindromes == []
-        ):
+    palindromes == []
+):
     raise NoPalindromesError
 ```
 This raises the ```__str__``` component of ```NoPalindromesError(Exception)``` class: 
@@ -103,7 +103,7 @@ Uses ```import re``` function ```finditer``` to iteratively search through the `
 ```        
 result = re.finditer(
     searchPhrase, self.text
-    )  # Iteratively searches phrase    using regex
+    )
 ```
 ```re.finditer``` outputs an iterator datastream, from which the index numbers have to be printed. 
 
@@ -208,9 +208,76 @@ else:
 ```
 def findEmails(self):
 ```
+Regular expressions are a powerful tool to find specific substrings in the text. In this case we want to find email substrings. 
+
+There are a few characters that set emails apart from the rest, mainly the '@' symbol. We can use ```re.findall``` to find all substrings specified by the regular expression and add them to the list ```emails```:
+```
+emails = re.findall(
+     r"[a-z0-9\-+_]+[\.(?!\.)]*[a-z0-9\-+_]+@[a-z0-9\-+_]+[\.(?=\.)]*[a-z]+[a-z\.]*",
+     self.text,
+)
+```
+Since we want to avoid invalid email addresses, we use the regex [lookahead](https://docs.python.org/3/howto/regex.html#lookahead-assertions) functionality:
+```
+[\.(?!\.)]*
+```
+Specifies a *negative* lookahead ```?!``` for the period ```\.``` following another period. This avoids email addresses that have multiple periods following each other directly, which is invalid.
+
+Just like with the previous function, if no emails are found we raise an exception:
+```
+if emails == []:
+    raise NoEmailAddressesError
+else:
+    click.echo(emails)
+```
 
 ---
 ```
 def findSecret(self):
 ```
+Uses [unicode](https://docs.python.org/3/howto/unicode.html) functionality to solve a [Caesar Cipher](https://en.wikipedia.org/wiki/Caesar_cipher) found hidden within the text as a secret.
+
+Since the text file ```text.txt``` contains several words with upper-case characters randomly spread within, we can use ```re.findall``` to store a list of all of these words:
+```
+capitalwords = re.findall(r"[a-z]+[A-Z]+[a-z]+", self.text)
+```
+> This regular expression simply finds one or more ```[A-Z]``` between lower case characters ```[a-z]``` and stores them in list ```capitalwords```
+
+Now we need to extract the upper-case *characters* from these words. This is done through list comprehension, where each string ```word``` in ```capitalwords``` is looped through, seeing which character ```char``` is upper case. Each upper case character is put into list ```upper```:
+```
+upper = []
+for word in capitalwords:
+    string = ""
+    string = [
+        char for char in word if char.isupper()
+    ].pop()
+    upper.append(string)
+```
+> We need to use ```.pop()``` as we are using list comprehension to loop through the characters in ```word```, otherwise ```upper``` would have nested lists within itself.
+
+The shift for the Caesar Cipher in this particular text is 13, so we define that before using ```.join()``` on ```upper``` to turn our list into a single string of upper-case characters:
+```
+shift = 13
+encryptedString = ""
+encryptedString = encryptedString.join(upper)
+```
+Finally we use unicode's internal functions in Python ```ord``` and ```chr``` to first convert each ```char``` in ```encryptedString``` into its respective unicode, find its index position, and shift it by 13. Then we convert it back to a character and add it to ```decryptedString```:
+```
+for char in encryptedString:
+    uni = ord(char)
+
+    index = uni - ord("A")
+
+    new_index = (index - shift) % 26
+
+    new_uni = new_index + ord("A")
+
+    new_char = chr(new_uni)
+
+    decryptedString += new_char
+```
+> The modulus for 26 is used as there are 26 characters in the alphabet, so the character will loop back from 26 to 0 if shifted beyond.
+
+```decryptedString``` is then printed.
+
 ---
