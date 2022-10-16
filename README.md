@@ -10,6 +10,7 @@ Text editor that performs various functions as follows:
     * Following this, allow the user to save text as a new file.
 * List the most common words seen in the text.
 * Find and list all palindromes.
+* Find and list all individual words which are palindromes.
 * List all email addresses found in the text.
 * Show the secret message in the text.
     * Secret message is encoded as mid-word upper case characters.
