@@ -97,10 +97,16 @@ class MyTextProcessor(TextProcessor):
                 nl=False,
             )
             click.secho(
-                f"{words_count[x][0]} with {words_count[x][1]} occurrences.",
+                f"{words_count[x][0]}",
+                fg="red",
+                bg="black",
+                nl=False,
+            )
+            click.secho(
+                f" with {words_count[x][1]} counts.",
                 fg="green",
                 bg="black",
-            )
+                )
 
     def findPalindromes(self) -> list:
         """Iterates through text to find if the substring is equal to the reverse of the substring."""
