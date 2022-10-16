@@ -45,12 +45,12 @@ python -m pip install -r requirements.txt
 
 **OS X and Linux**
 ```sh
-python ./docuworksProject/docuworksProject.py
+python ./docuworksProject/docuworksProject.py [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Windows**
 ```sh
-python .\docuworksProject\docuworksProject.py
+python .\docuworksProject\docuworksProject.py [OPTIONS] COMMAND [ARGS]...
 ```
 
 ## Documentation
@@ -60,8 +60,7 @@ python .\docuworksProject\docuworksProject.py
     * Custom Exceptions
     * MyTextProcessor Class
     * Menu and LoadApp Functions
-2. Visual Menu
-3. MyTextProcessor Result Examples
+2. MyTextProcessor Result Examples
 
 ---
 
@@ -308,36 +307,7 @@ for char in encryptedString:
 
 ---
 
-* ### Menu and LoadApp Functions
-The main() function consists of structuring the menu into eight options, printed to the console as such:
-```
-click.echo("Please select a Menu Option | (1 - 8): ")
-click.echo("1. Display text")
-click.echo("2. Search phrase")
-click.echo("3. Search & replace")
-click.echo("4. List most common words")
-click.echo("5. List palindromes")
-click.echo("6. List email addresses")
-click.echo("7. Show secret message")
-click.echo("8. Quit program.")
-```
-We then use [```click```](https://click.palletsprojects.com/en/8.1.x/)'s function [```getchar()```](https://click.palletsprojects.com/en/8.1.x/api/?highlight=getchar#click.getchar) to obtain a number input 1-8 from the user. This input is then put through an extensive ```if``` statement to select which function to run:
-```
-if option == "1":
-    display()
-elif option == "2":
-    search()
-```
-and so forth until:
-```
-elif option == "8":
-    sys.exit()
-else:
-    click.clear()
-    click.echo("Invalid option.")
-    click.pause()
-```
----
+* ### LoadApp Functions
 
 ```LoadApp()``` is called several times within nested functions of ```main()```. This function simply calls the ```MyTextProcessor``` Class as ```app``` and performs ```app.load()``` function on [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt):
 ```
@@ -351,25 +321,16 @@ return app
 
 The remaining nested functions simply take user input, process it, and call upon ```LoadApp()```, and hence the ```MyTextProcessor``` Class to process user input as seen above.
 
-As an example, the ```commonWords()``` function which is executed when the user input on ```main()``` is ```option == '4'``` loops a user input question of how many of the most used words they would like to see printed onto the console:
+As an example, the ```replace()``` function uses [click arguments](https://click.palletsprojects.com/en/8.1.x/api/#click.argument) ```searchphrase``` and ```replacephrase``` supplied by the user. It also has the [click option](https://click.palletsprojects.com/en/8.1.x/api/#click.option) ```--save``` which is a boolean value that determines whether the user wants to save the new text as a new file:
 ```
-option = "y"
-while option == "y":
-    click.clear()
-    app = loadApp()
+app = loadApp()
+app.replace(searchphrase, replacephrase)
 
-    toplimit = input("How many of the most used words should be shown?: ")
+if save:
+    fileName = click.prompt('Please enter a file name', type=str)
+    fileName = fileName + ".txt"
 
-    try:
-        toplimit = int(toplimit)
-    except:
-        click.echo("Please enter a valid number.")
-        click.pause()
-    else:
-        app.findCommon(toplimit)
-
-    click.clear()
-    click.echo("Would you like to try again? y/n\n")
-    option = click.getchar()
+    app.save(Path(fileName))
+    click.echo(f"Saved {fileName} succesfully.")
 ```
-> Error management is performed on user input, using ```try``` to ```except``` a non-integer value.
+> Error management is performed on user input automatically through [click prompt](https://click.palletsprojects.com/en/8.1.x/api/#click.prompt) formatting.
