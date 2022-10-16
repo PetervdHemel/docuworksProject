@@ -40,5 +40,74 @@ python -m pip install -r requirements.txt
 ```
 
 ## Documentation
+**Table of Contents**
 
-## Release History
+1. Structure
+2. Menu
+3. MyTextProcessor Examples
+
+**Structure:**
+
+The program is divided into three sections:
+
+1. Custom Exceptions:
+```
+class NoPalindromesError(Exception):
+```
+```
+class NoEmailAddressesError(Exception):
+```
+These exceptions are raised in the ```MyTextProcessor``` class under ```findPalindromes``` and ```findEmails``` respectively, when the text is processed and contains no palindromes or email addresses.
+
+As an example, both palindromes and emails are checked as an empty list:
+```
+if (
+            palindromes == []
+        ):
+    raise NoPalindromesError
+```
+This raises the ```__str__``` component of ```NoPalindromesError(Exception)``` class: 
+```
+    def __str__(self):
+        return f"The processed string contains no palindromes."
+```
+2. MyTextProcessor Class:
+```
+class MyTextProcessor(TextProcessor):
+```
+Calls ```TextProcessor(ABC)``` abstract class.
+
+```TextProcessor``` contains all the primary features of the program, seen as functions. It is made up of the following functions:
+```
+load(self, path):
+```
+>which opens the text file under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on.
+```
+display(self):
+```
+> Simply prints the ```self.text``` string.
+```
+iterSearch(self, searchPhrase):
+```
+> Uses ```import re``` function ```finditer``` to iteratively search through the ```self.text``` string using ```searchPhrase``` and stores it in ```result```. ```re.finditer``` outputs an iterator datastream, from which the index numbers have to be printed. Indices are acquired by ```indices = [
+                index.start() for index in result```
+after which the indices are printed.
+```
+replace(self, searchStr, replaceStr):
+```
+> Makes use of ```import re``` function ```sub``` to substitute (replace) ```self.text``` substrings ```searchStr``` with ```replaceStr``` and then prints the new text.
+```
+save(self, path):
+```
+```
+findCommon(self, limit):
+```
+```
+findPalindromes(self) -> list:
+```
+```
+findEmails(self):
+```
+```
+findSecret(self):
+```

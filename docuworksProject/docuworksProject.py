@@ -74,9 +74,9 @@ class MyTextProcessor(TextProcessor):
 
     def replace(self, searchStr, replaceStr):
         # Initalize new text object for replaced text
-        self.newTxt = re.sub(searchStr, replaceStr, self.text)
+        newTxt = re.sub(searchStr, replaceStr, self.text)
 
-        click.echo(f"New text: \n{self.newTxt}")
+        click.echo(f"New text: \n{newTxt}")
 
     def save(self, path):
         with click.open_file(path, "w") as newFile:
