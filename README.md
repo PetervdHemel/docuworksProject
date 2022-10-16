@@ -22,10 +22,10 @@ Text editor that performs various functions as follows:
 Make sure you have [Python 3](https://www.python.org/downloads/) installed.
 
 Clone the repository to your directory of choice. If you use [git](https://git-scm.com/downloads) you can follow these commands in order:
-```
+```sh
 cd [path/to/directory]
 ```
-```
+```sh
 git clone https://github.com/PetervdHemel/docuworksProject.git
 ```
 ---
@@ -80,10 +80,10 @@ python .\docuworksProject\docuworksProject.py [OPTIONS] COMMAND [ARGS]...
 ---
 
 1. ### Custom Exceptions:
-```
+```python
 class NoPalindromesError(Exception):
 ```
-```
+```python
 class NoEmailAddressesError(Exception):
 ```
 These exceptions are raised in the ```MyTextProcessor``` class under ```findPalindromes``` and ```findEmails``` respectively, when the text is processed and contains no palindromes or email addresses.
