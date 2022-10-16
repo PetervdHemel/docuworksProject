@@ -55,22 +55,20 @@ python .\docuworksProject\docuworksProject.py [OPTIONS] COMMAND [ARGS]...
 
 ## Documentation
 **Table of Contents**
-
-1. Code Structure
-    * Custom Exceptions
-    * MyTextProcessor Class
-    * Menu and LoadApp Functions
-2. MyTextProcessor Result Examples
-
----
-
-### 1. Code Structure:
-
-The program is divided into three sections:
+1. Custom Exceptions
+2. MyTextProcessor Class
+    * display
+    * iterSearch
+    * replace
+    * save
+    * findCommon
+    * findPalindromes
+    * findSecret
+3. LoadApp Functions and Click
 
 ---
 
-* ### Custom Exceptions:
+1. ### Custom Exceptions:
 ```
 class NoPalindromesError(Exception):
 ```
@@ -94,7 +92,7 @@ def __str__(self):
 
 ---
 
-* ### MyTextProcessor Class:
+2. ### MyTextProcessor Class:
 ```
 class MyTextProcessor(TextProcessor):
 ```
@@ -307,7 +305,7 @@ for char in encryptedString:
 
 ---
 
-* ### LoadApp Functions
+3. ### LoadApp Functions and Click
 
 ```LoadApp()``` is called several times within nested functions of ```main()```. This function simply calls the ```MyTextProcessor``` Class as ```app``` and performs ```app.load()``` function on [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt):
 ```
@@ -334,3 +332,5 @@ if save:
     click.echo(f"Saved {fileName} succesfully.")
 ```
 > Error management is performed on user input automatically through [click prompt](https://click.palletsprojects.com/en/8.1.x/api/#click.prompt) formatting.
+
+---
