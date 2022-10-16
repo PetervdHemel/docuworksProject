@@ -68,8 +68,8 @@ if (
 ```
 This raises the ```__str__``` component of ```NoPalindromesError(Exception)``` class: 
 ```
-    def __str__(self):
-        return f"The processed string contains no palindromes."
+def __str__(self):
+    return f"The processed string contains no palindromes."
 ```
 2. MyTextProcessor Class:
 ```
@@ -81,21 +81,21 @@ Calls ```TextProcessor(ABC)``` abstract class.
 ```
 load(self, path):
 ```
->which opens the text file under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on.
+Opens the text file under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on.
 ```
 display(self):
 ```
-> Simply prints the ```self.text``` string.
+Simply prints the ```self.text``` string.
 ```
 iterSearch(self, searchPhrase):
 ```
-> Uses ```import re``` function ```finditer``` to iteratively search through the ```self.text``` string using ```searchPhrase``` and stores it in ```result```. ```re.finditer``` outputs an iterator datastream, from which the index numbers have to be printed. Indices are acquired by ```indices = [
+Uses ```import re``` function ```finditer``` to iteratively search through the ```self.text``` string using ```searchPhrase``` and stores it in ```result```. ```re.finditer``` outputs an iterator datastream, from which the index numbers have to be printed. Indices are acquired by ```indices = [
                 index.start() for index in result```
 after which the indices are printed.
 ```
 replace(self, searchStr, replaceStr):
 ```
-> Makes use of ```import re``` function ```sub``` to substitute (replace) ```self.text``` substrings ```searchStr``` with ```replaceStr``` and then prints the new text.
+Makes use of ```import re``` function ```sub``` to substitute (replace) ```self.text``` substrings ```searchStr``` with ```replaceStr``` and then prints the new text.
 ```
 save(self, path):
 ```
