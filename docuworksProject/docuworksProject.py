@@ -46,6 +46,10 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def findPalindromeWords(self) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
     def findSecret(self) -> None:
         raise NotImplementedError
 
@@ -63,14 +67,16 @@ class MyTextProcessor(TextProcessor):
             searchPhrase, self.text
         )  # Iteratively searches phrase using regex
 
-
-        indices =  [(index.start(), index.end() - 1) for index in result] # Creates a list of indices for each index in result
+        indices = [
+            (index.start(), index.end() - 1) for index in result
+        ]  # Creates a list of indices for each index in result
         if indices == []:
             click.echo("None found.")
         else:
-            click.secho(f"Start, stop indices of {searchPhrase}:", fg="white", bg="black")
+            click.secho(
+                f"Start, stop indices of {searchPhrase}:", fg="white", bg="black"
+            )
             click.echo(indices)
-            
 
     def replace(self, searchStr, replaceStr):
         # Initalize new text object for replaced text
@@ -106,7 +112,7 @@ class MyTextProcessor(TextProcessor):
                 f" with {words_count[x][1]} counts.",
                 fg="green",
                 bg="black",
-                )
+            )
 
     def findPalindromes(self) -> list:
         """Iterates through text to find if the substring is equal to the reverse of the substring."""
@@ -135,6 +141,41 @@ class MyTextProcessor(TextProcessor):
 
         if palindromes == []:  # Check if any palindromes were added to the list
             raise NoPalindromesError  # Could also catch the error and print the exception instead of raising.
+        else:
+            return palindromes
+
+    def findPalindromeWords(self) -> list:
+        """Iterates through each word in the text, to see if it is equal to its reverse equivalent."""
+
+        formatText = self.text.lower().replace(
+            "\n", " "
+        )  # Get rid of new lines and make lower case
+
+        words = list(
+            formatText.split(" ")
+        )  # Split each word in the text into list entries
+
+        validWords = []
+        for word in words:
+            # Get rid of punctuation
+            word = re.sub(r"[^\w\s]", "", word)
+            validWords.append(word)
+
+        # Use list comprehension to store each word into validStrings if it is at least 3 long
+        validStrings = [string for string in validWords if len(string) > 2]
+
+        palindromes = []
+
+        with click.progressbar(
+            length=len(validStrings)
+        ) as bar:  # Use click to provide a progress bar
+            for i in bar:
+                temp = validStrings[i]
+                if temp == temp[::-1]:
+                    palindromes.append(temp)
+
+        if palindromes == []:
+            raise NoPalindromesError
         else:
             return palindromes
 
@@ -272,7 +313,7 @@ def commonWords(limit):
 
 @main.command("palindromes")
 def palindromes():
-    """Finds all palindromes in text."""
+    """Finds all palindrome phrases in text."""
 
     app = loadApp()
 
@@ -296,6 +337,19 @@ def secret():
     app = loadApp()
 
     app.findSecret()
+
+
+@main.command("palindromeWords")
+def palindromeWords():
+    """
+    Finds all full palindrome words in text.\n
+    Differs from 'palindromes' as it only compares full words, regardless of punctuation, not every phrase.
+    """
+
+    app = loadApp()
+
+    palindromes = app.findPalindromeWords()
+    click.echo(palindromes)
 
 
 if __name__ == "__main__":
