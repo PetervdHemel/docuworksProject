@@ -64,7 +64,7 @@ class MyTextProcessor(TextProcessor):
         )  # Iteratively searches phrase using regex
 
         if result != None:
-            click.echo("Index of found searched phrase:")
+            click.secho("Index of found searched phrase:", fg='white', bg='black')
             indices = [
                 index.start() for index in result
             ]  # Creates a list of indices for each index in result
@@ -76,7 +76,8 @@ class MyTextProcessor(TextProcessor):
         # Initalize new text object for replaced text
         self.newTxt = re.sub(searchStr, replaceStr, self.text)
 
-        click.echo(f"New text: \n{self.newTxt}")
+        click.secho("New text:\n", fg='green', bg='black')
+        click.echo(self.newTxt)
 
     def save(self, path):
         with click.open_file(path, "w") as newFile:
@@ -89,9 +90,8 @@ class MyTextProcessor(TextProcessor):
         words = self.text.split(" ")
         words_count = Counter(words).most_common()
         for x in range(limit):
-            click.echo(
-                f"Most frequent word place {x + 1} is: {words_count[x][0]} with {words_count[x][1]} occurrences."
-            )
+            click.secho(f"Most frequent word place {x + 1} is: ", fg='white', bg='black', nl=False)
+            click.secho(f"{words_count[x][0]} with {words_count[x][1]} occurrences.", fg='green', bg='black')
 
     def findPalindromes(self) -> list:
         """Iterates through text to find if the substring is equal to the reverse of the substring."""
@@ -160,7 +160,7 @@ class MyTextProcessor(TextProcessor):
         encryptedString = encryptedString.join(upper)
 
         # Print encrypted string for before/after comparison
-        click.echo(f"Encrypted Message: {encryptedString}")
+        click.secho(f"Encrypted Message: {encryptedString}", fg='red', bg='black')
 
         decryptedString = ""
 
@@ -179,13 +179,13 @@ class MyTextProcessor(TextProcessor):
             # Add to string
             decryptedString += new_char
 
-        click.echo(f"Secret Message: {decryptedString}")
+        click.secho(f"Secret Message: {decryptedString}", fg='green', bg='black')
 
 
 def loadApp() -> MyTextProcessor:
     """Calls text processor class and loads the class. Returns class."""
     app = MyTextProcessor()
-    app.load(Path(r"..\text.txt"))
+    app.load(Path(r".\text.txt"))
 
     return app
 
@@ -242,7 +242,7 @@ def replace(searchphrase, replacephrase, save):
         fileName = fileName + ".txt"
 
         app.save(Path(fileName))
-        click.echo(f"Saved {fileName} succesfully.")
+        click.secho(f"Saved {fileName} succesfully.", fg='green', bg='black')
 
 
 
