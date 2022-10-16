@@ -50,7 +50,8 @@ python -m pip install -r requirements.txt
 
 The program is divided into three sections:
 
-1. Custom Exceptions:
+
+### Custom Exceptions:
 ```
 class NoPalindromesError(Exception):
 ```
@@ -71,43 +72,101 @@ This raises the ```__str__``` component of ```NoPalindromesError(Exception)``` c
 def __str__(self):
     return f"The processed string contains no palindromes."
 ```
-2. MyTextProcessor Class:
+
+### MyTextProcessor Class:
 ```
 class MyTextProcessor(TextProcessor):
 ```
 Calls ```TextProcessor(ABC)``` abstract class.
 
 ```TextProcessor``` contains all the primary features of the program, seen as functions. It is made up of the following functions:
+
+---
 ```
 load(self, path):
 ```
 Opens the text file under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on.
+
+---
 ```
 display(self):
 ```
-Simply prints the ```self.text``` string.
+Simply prints the ```self.text``` string:
+```
+click.echo(self.text)
+```
+---
 ```
 iterSearch(self, searchPhrase):
 ```
-Uses ```import re``` function ```finditer``` to iteratively search through the ```self.text``` string using ```searchPhrase``` and stores it in ```result```. ```re.finditer``` outputs an iterator datastream, from which the index numbers have to be printed. Indices are acquired by ```indices = [
-                index.start() for index in result```
+Uses ```import re``` function ```finditer``` to iteratively search through the ```self.text``` string using ```searchPhrase``` and stores it in ```result```:
+```        
+result = re.finditer(
+    searchPhrase, self.text
+    )  # Iteratively searches phrase    using regex
+```
+```re.finditer``` outputs an iterator datastream, from which the index numbers have to be printed. 
+
+Indices are acquired by 
+```
+indices = [
+    index.start() for index in result
+```
 after which the indices are printed.
+
+---
 ```
 replace(self, searchStr, replaceStr):
 ```
-Makes use of ```import re``` function ```sub``` to substitute (replace) ```self.text``` substrings ```searchStr``` with ```replaceStr``` and then prints the new text.
+Makes use of ```import re``` function ```sub``` to substitute (replace) ```self.text``` substrings ```searchStr``` with ```replaceStr``` and then prints the new text:
+
+```
+newTxt = re.sub(searchStr, replaceStr, self.text)
+```
+---
 ```
 save(self, path):
 ```
+Can be called to open a file as 'write' ```"w"``` following ```path``` input:
+```
+with click.open_file(path, "w") as newFile:
+    newFile.seek(0)  # Start at beginning of the file.
+    newFile.write(self.newTxt)
+```
+It makes sure to write at the beginning of the file, regardless of if it is a new file or not with ```.seek(0)```
+
+---
 ```
 findCommon(self, limit):
 ```
+Is used to find the most common words in the text, ranked by ```limit``` set by the user input.
+```
+words = self.text.split(" ")
+```
+Splits the entire text string into a list, where each word is a list item. This makes it easier to count the number of common words.
+```
+words_count = Counter(words).most_common()
+```
+```Counter``` is used from the ```collections``` [module](https://docs.python.org/3/library/collections.html#collections.Counter) to create a dictionary ```words_count``` with their key as popularity, value as number of occurrences. These are then printed:
+```
+for x in range(limit):
+    click.echo(
+        f"Most frequent word place {x + 1} is: {words_count[x][0]} with {words_count[x][1]} occurrences."
+    )
+```
+
+---
 ```
 findPalindromes(self) -> list:
 ```
+
+---
 ```
 findEmails(self):
 ```
+
+---
 ```
 findSecret(self):
 ```
+---
