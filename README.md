@@ -1,5 +1,5 @@
 # DocuWorks Text Editor Assessment
-> Reads a text file (text.txt) and performs various functions on it as required by the Product Owner.
+> Reads a text file [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt) and performs various functions on it as required by the Product Owner.
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -85,7 +85,7 @@ Calls ```TextProcessor(ABC)``` abstract class.
 ```
 def load(self, path):
 ```
-Opens the text file under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on:
+Opens the [text file](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt) under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on:
 ```
 with click.open_file(path, "r") as file:
     self.text = file.read()
