@@ -241,7 +241,7 @@ def findSecret(self):
 ```
 Uses [unicode](https://docs.python.org/3/howto/unicode.html) functionality to solve a [Caesar Cipher](https://en.wikipedia.org/wiki/Caesar_cipher) found hidden within the text as a secret.
 
-Since the text file ```text.txt``` contains several words with upper-case characters randomly spread within, we can use ```re.findall``` to store a list of all of these words:
+Since the text file [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt) contains several words with upper-case characters randomly spread within, we can use ```re.findall``` to store a list of all of these words:
 ```
 capitalwords = re.findall(r"[a-z]+[A-Z]+[a-z]+", self.text)
 ```
