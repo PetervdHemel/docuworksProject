@@ -178,7 +178,7 @@ stringLength = len(string)
 ```
 makes sure we know how many times to loop through the entirety of the text. We also make sure to store the palindromes found in a list aptly named ```palindromes```
 
-We will use the ```click``` module to provide a ```progressbar``` as this loop might take a while to complete, depending on the length of the text given:
+We will use the [```click```](https://click.palletsprojects.com/en/8.1.x/) module to provide a [```progressbar```](https://click.palletsprojects.com/en/8.1.x/api/?highlight=progressbar#click.progressbar) as this loop might take a while to complete, depending on the length of the text given:
 ```
 with click.progressbar(
     length=stringLength
