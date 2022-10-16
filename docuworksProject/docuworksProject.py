@@ -211,11 +211,9 @@ def display():
 @click.argument('searchphrase')
 def search(searchphrase):
     """
-    Searches text using a user input string, outputs index.\n
+    Searches text using SEARCHPHRASE, outputs index.\n
     Example: python docuworksProject.py search Tos
     """
-
-    #search = input("Please provide an input string for searching: ")
 
     app = loadApp()
     app.iterSearch(searchphrase)
@@ -226,7 +224,14 @@ def search(searchphrase):
 @click.argument('replacephrase')
 @click.option('--save', default=False, help='Save as new file True/False')
 def replace(searchphrase, replacephrase, save):
-    """Search phrase and replace it."""
+    """
+    Search phrase and replace it.
+
+    SEARCHPHRASE is used to search the text.\n
+    REPLACEPHRASE is used to replace the text.\n
+
+    Example: python docuworksProject.py replace --save True Tos Peter
+    """
 
     app = loadApp()
     app.replace(searchphrase, replacephrase)
