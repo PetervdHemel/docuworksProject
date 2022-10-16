@@ -18,16 +18,25 @@ Text editor that performs various functions as follows:
 ![](img/overview.png)
 
 ## Installation
-OS X and Linux:
+Create and activate a virtual environment (venv):
 ```sh
-$ source <venv>/bin/activate
-$ source pip3 install -r requirements.txt
+python -m venv venv
 ```
 
-Windows:
+**OS X and Linux**
 ```sh
-C:\> <venv>\Scripts\activate.bat
-C:\> python -m pip install -r requirements.txt
+./venv/bin/activate
+```
+```sh
+pip3 install -r requirements.txt
+```
+
+**Windows**
+```sh
+.\venv\Scripts\activate.bat
+```
+```sh
+python -m pip install -r requirements.txt
 ```
 
 ## Documentation
