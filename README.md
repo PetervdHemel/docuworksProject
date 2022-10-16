@@ -85,7 +85,11 @@ Calls ```TextProcessor(ABC)``` abstract class.
 ```
 def load(self, path):
 ```
-Opens the text file under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on.
+Opens the text file under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on:
+```
+with click.open_file(path, "r") as file:
+    self.text = file.read()
+```
 
 ---
 ```
