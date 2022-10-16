@@ -194,7 +194,8 @@ def main():
     """
     Reads the text file 'text.txt' and performs various functions.\n
     Example Usage:\n
-    python docuworksProject.py search Tos
+    python docuworksProject.py replace --help\n
+    To obtain the help page for the replace command.
     """
     
 @main.command("display")
