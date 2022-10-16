@@ -74,9 +74,9 @@ class MyTextProcessor(TextProcessor):
 
     def replace(self, searchStr, replaceStr):
         # Initalize new text object for replaced text
-        newTxt = re.sub(searchStr, replaceStr, self.text)
+        self.newTxt = re.sub(searchStr, replaceStr, self.text)
 
-        click.echo(f"New text: \n{newTxt}")
+        click.echo(f"New text: \n{self.newTxt}")
 
     def save(self, path):
         with click.open_file(path, "w") as newFile:
@@ -92,8 +92,6 @@ class MyTextProcessor(TextProcessor):
             click.echo(
                 f"Most frequent word place {x + 1} is: {words_count[x][0]} with {words_count[x][1]} occurrences."
             )
-
-        click.pause()
 
     def findPalindromes(self) -> list:
         """Iterates through text to find if the substring is equal to the reverse of the substring."""
@@ -120,7 +118,6 @@ class MyTextProcessor(TextProcessor):
                                 temp
                             )  # Add the palindromes to list, useful for any future additions.
                             
-        click.clear()
         if (
             palindromes == []
         ):  # Check if any palindromes were added to the list
@@ -188,152 +185,96 @@ class MyTextProcessor(TextProcessor):
 def loadApp() -> MyTextProcessor:
     """Calls text processor class and loads the class. Returns class."""
     app = MyTextProcessor()
-    app.load(Path(r"text.txt"))
+    app.load(Path(r"..\text.txt"))
 
     return app
 
-
-@click.command()
+@click.group()
 def main():
-    """"""
-    click.clear()
-    click.echo("DocuWorks Assessment Text Editor\n")
-
-    click.echo("Please select a Menu Option | (1 - 8): ")
-    click.echo("1. Display text")
-    click.echo("2. Search phrase")
-    click.echo("3. Search & replace")
-    click.echo("4. List most common words")
-    click.echo("5. List palindromes")
-    click.echo("6. List email addresses")
-    click.echo("7. Show secret message")
-    click.echo("8. Quit program.")
-
-    click.echo("")
-    option = click.getchar()
-
-    # Process input character
-    if option == "1":
-        display()
-    elif option == "2":
-        search()
-    elif option == "3":
-        replace()
-    elif option == "4":
-        commonWords()
-    elif option == "5":
-        palindromes()
-    elif option == "6":
-        emails()
-    elif option == "7":
-        secret()
-    elif option == "8":
-        sys.exit()
-    else:
-        click.clear()
-        click.echo("Invalid option.")
-        click.pause()
-        main()
-
-
-@click.command()
+    """
+    Reads the text file 'text.txt' and performs various functions.\n
+    Example Usage:\n
+    python docuworksProject.py search Tos
+    """
+    
+@main.command("display")
 def display():
+    """ 
+    Displays text.
+    """
     app = loadApp()
 
     app.display()
-    click.pause()
 
 
-@click.command()
-def search():
-    """Searches through the text using a user input string and outputs index."""
-    option = "y"
-    while option == "y":
-        click.clear()
-        search = input("Please provide an input string for searching: ")
+@main.command("search")
+@click.argument('searchphrase')
+def search(searchphrase):
+    """
+    Searches text using a user input string, outputs index.\n
+    Example: python docuworksProject.py search Tos
+    """
 
-        app = loadApp()
-        app.iterSearch(search)
+    #search = input("Please provide an input string for searching: ")
 
-        click.echo("\nWould you like to try again? y/n\n")
-        option = click.getchar()
-
-
-@click.command()
-def replace():
-    """Searches through the text using a user input string and replaces text"""
-    option = "y"
-    while option == "y":
-        click.clear()
-
-        search = input("Please provide an input string for searching: ")
-        replace = input("Please provide an input string for replacing: ")
-
-        app = loadApp()
-        app.replace(search, replace)
-
-        click.echo("\nDo you want to save the edited file as a new file? y/n: ")
-        option = click.getchar()
-
-        if option == "y":
-            name = input("Please enter the file name: ")
-            name = name + ".txt"
-
-            app.save(Path(name))
-
-        click.clear()
-        click.echo("Would you like to try again? y/n\n")
-        option = click.getchar()
+    app = loadApp()
+    app.iterSearch(searchphrase)
 
 
-@click.command()
-def commonWords():
-    """Finds the most commonly used words in the text."""
-    option = "y"
-    while option == "y":
-        click.clear()
-        app = loadApp()
+@main.command("replace")
+@click.argument('searchphrase')
+@click.argument('replacephrase')
+@click.option('--save', default=False, help='Save as new file True/False')
+def replace(searchphrase, replacephrase, save):
+    """Search phrase and replace it."""
 
-        toplimit = input("How many of the most used words should be shown?: ")
+    app = loadApp()
+    app.replace(searchphrase, replacephrase)
 
-        try:
-            toplimit = int(toplimit)
-        except:
-            click.echo("Please enter a valid number.")
-            click.pause()
-        else:
-            app.findCommon(toplimit)
+    if save:
+        fileName = click.prompt('Please enter a file name', type=str)
+        fileName = fileName + ".txt"
 
-        click.clear()
-        click.echo("Would you like to try again? y/n\n")
-        option = click.getchar()
+        app.save(Path(fileName))
+        click.echo(f"Saved {fileName} succesfully.")
 
 
-@click.command()
+
+@main.command("common")
+@click.option('--limit', default=5, help='Number of most common words listed')
+def commonWords(limit):
+    """Finds most commonly used words in text."""
+
+    app = loadApp()
+
+    app.findCommon(limit)
+
+
+@main.command("palindromes")
 def palindromes():
-    click.clear()
+    """Finds all palindromes in text."""
+
     app = loadApp()
 
     palindromes = app.findPalindromes()
     click.echo(palindromes)
-    click.pause()
 
-
-@click.command()
+@main.command("emails")
 def emails():
-    click.clear()
+    """Finds all emails in text."""
+
     app = loadApp()
 
     app.findEmails()
 
-
-@click.command()
+@main.command("secret")
 def secret():
-    click.clear()
+    """Finds secret message in text."""
+
     app = loadApp()
 
     app.findSecret()
-    click.pause()
+
 
 
 if __name__ == "__main__":
