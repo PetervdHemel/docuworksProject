@@ -191,7 +191,8 @@ class MyTextProcessor(TextProcessor):
         if emails == []:
             raise NoEmailAddressesError
         else:
-            click.echo(emails)
+            for i in range(len(emails)):
+                click.echo(f"Email {i + 1}: {emails[i]}")
 
     def findSecret(self):
         """Finds secret message in text"""

@@ -1,5 +1,5 @@
 # DocuWorks Text Editor Assessment
-> Reads a text file [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt) and performs various functions on it as required by the Product Owner.
+> Reads a text file [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/text.txt) and performs various functions on it as required by the Product Owner.
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -115,7 +115,7 @@ Calls ```TextProcessor(ABC)``` abstract class.
 ```python
 def load(self, path):
 ```
-Opens the [text file](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt) under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on:
+Opens the [text file](https://github.com/PetervdHemel/docuworksProject/blob/master/text.txt) under Path ```text.txt``` under read ```"r"``` as a file, and stores it in ```self.text```. This variable is used in the rest of the ```MyTextProcessor``` functions as a string file to perform actions on:
 ```python
 with click.open_file(path, "r") as file:
     self.text = file.read()
@@ -307,7 +307,8 @@ Just like with the previous function, if no emails are found we raise an excepti
 if emails == []:
     raise NoEmailAddressesError
 else:
-    click.echo(emails)
+    for i in range(len(emails)):
+        click.echo(f"Email {i + 1}: {emails[i]}")
 ```
 
 ---
@@ -316,7 +317,7 @@ def findSecret(self):
 ```
 Uses [unicode](https://docs.python.org/3/howto/unicode.html) functionality to solve a [Caesar Cipher](https://en.wikipedia.org/wiki/Caesar_cipher) found hidden within the text as a secret.
 
-Since the text file [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt) contains several words with upper-case characters randomly spread within, we can use ```re.findall``` to store a list of all of these words:
+Since the text file [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/text.txt) contains several words with upper-case characters randomly spread within, we can use ```re.findall``` to store a list of all of these words:
 ```python
 capitalwords = re.findall(r"[a-z]+[A-Z]+[a-z]+", self.text)
 ```
@@ -363,7 +364,7 @@ for char in encryptedString:
 
 3. ### LoadApp Functions and Click
 
-```LoadApp()``` is called several times within nested functions of ```main()```. This function simply calls the ```MyTextProcessor``` Class as ```app``` and performs ```app.load()``` function on [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt):
+```LoadApp()``` is called several times within nested functions of ```main()```. This function simply calls the ```MyTextProcessor``` Class as ```app``` and performs ```app.load()``` function on [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/text.txt):
 ```python
 app = MyTextProcessor()
 app.load(Path(r"text.txt"))
