@@ -104,7 +104,7 @@ def __str__(self):
 ---
 
 2. ### MyTextProcessor Class:
-```
+```python
 class MyTextProcessor(TextProcessor):
 ```
 Calls ```TextProcessor(ABC)``` abstract class.
