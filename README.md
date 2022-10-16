@@ -63,6 +63,7 @@ python .\docuworksProject\docuworksProject.py [OPTIONS] COMMAND [ARGS]...
     * save
     * findCommon
     * findPalindromes
+    * findPalindromeWords
     * findSecret
 3. LoadApp Functions and Click
 4. Definition of done Checklist
@@ -134,9 +135,10 @@ result = re.finditer(
 Indices are acquired by 
 ```
 indices = [
-    index.start() for index in result
+    (index.start(), index.end() - 1) for index in result
+]
 ```
-after which the indices are printed.
+after which the starting and ending indices for each word matched are printed.
 
 ---
 ```
@@ -154,7 +156,7 @@ def save(self, path):
 Can be called to open a file as 'write' ```"w"``` following ```path``` input:
 ```
 with click.open_file(path, "w") as newFile:
-    newFile.seek(0)  # Start at beginning of the file.
+    newFile.seek(0)
     newFile.write(self.newTxt)
 ```
 It makes sure to write at the beginning of the file, regardless of if it is a new file or not with ```.seek(0)```
@@ -174,10 +176,25 @@ words_count = Counter(words).most_common()
 ```Counter()``` is used from the ```collections``` [module](https://docs.python.org/3/library/collections.html#collections.Counter) to create a [dictionary](https://docs.python.org/3/glossary.html#term-dictionary) ```words_count``` with their *key* as popularity, *value* as number of occurrences. These are then printed:
 ```
 for x in range(limit):
-    click.echo(
-        f"Most frequent word place {x + 1} is: {words_count[x][0]} with {words_count[x][1]} occurrences."
-    )
+            click.secho(
+                f"Most frequent word place {x + 1} is: ",
+                fg="white",
+                bg="black",
+                nl=False,
+            )
+            click.secho(
+                f"{words_count[x][0]}",
+                fg="red",
+                bg="black",
+                nl=False,
+            )
+            click.secho(
+                f" with {words_count[x][1]} counts.",
+                fg="green",
+                bg="black",
+            )
 ```
+> ```click.secho``` is used to provide colouring and formatting options, to more easily distinguish the data set when printed.
 
 ---
 ```
@@ -227,6 +244,35 @@ if (
 else:
     return palindromes
 ```
+
+---
+```
+def findPalindromeWords(self) -> list:
+```
+In some ways similar to the previous function. 
+
+Instead of looping through each character with a nested loop to find any phrase that is a palindrome, it instead uses ```.split(" ")``` to store every full-length word into a list. After that, we make sure to remove punctuation, and use list comprehension to store each word that is at least 3 characters long into a new list:
+```
+validWords = []
+for word in words:
+    word = re.sub(r"[^\w\s]", "", word)
+    validWords.append(word)
+
+validStrings = [string for string in validWords if len(string) > 2]
+```
+> We use ```re.sub``` to specify a substitution of strictly punctuation with an empty string for each word.
+
+Finally, similarly to the previous function, we loop through the ```validStrings``` list and use string comprehension to compare each word to its reverse counterpart:
+```
+with click.progressbar(
+    length=len(validStrings)
+) as bar:
+    for i in bar:
+        temp = validStrings[i]
+        if temp == temp[::-1]:
+            palindromes.append(temp)
+```
+Returns ```palindromes``` list if it is not empty, otherwise raises ```NoPalindromesError```.
 
 ---
 ```
