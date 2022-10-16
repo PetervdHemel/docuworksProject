@@ -65,6 +65,7 @@ python .\docuworksProject\docuworksProject.py [OPTIONS] COMMAND [ARGS]...
     * findPalindromes
     * findSecret
 3. LoadApp Functions and Click
+4. Definition of done Checklist
 
 ---
 
@@ -334,3 +335,39 @@ if save:
 > Error management is performed on user input automatically through [click prompt](https://click.palletsprojects.com/en/8.1.x/api/#click.prompt) formatting.
 
 ---
+
+### Definition of done Checklist
+- [x] The application is written in Python 3.
+
+- [x] The application doesn't depend on third-party packages.
+
+- [x] Any third-party packages are described in a requirements.txt file.
+
+- [x] Consider using a virtual environment.
+
+- [x] The application is documented.
+
+- [x] Documentation is written in Markdown and saved as README.md.
+
+- [x] The application can run on the Product Owner's machine.
+    * The application was tested on another machine during production.
+
+- [x] The application is tested.
+    * Every module and function has been tested personally. Since I'm not very experienced with unit tests, I wasn't able to test the complete code base using pytest.
+
+- [x] Changes in the application's code are tracked by Git.
+
+- [x] Changes are committed early and often.
+    - [x] At least after each user story, see commit history.
+
+    - [x] Commit messages are descriptive and useful.
+
+- [x] The code follows PEP 8 – Style Guide for Python Code.
+    * Used Black for style.
+
+- [x] There are no abbreviations used.
+
+- [x] New functions don't break existing functions.
+    * All functions exist separately in the ```MyTextProcessor``` Class and as separate click commands.
+
+- [x] Document **how** to run it.

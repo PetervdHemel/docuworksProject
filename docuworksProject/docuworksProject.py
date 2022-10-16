@@ -64,7 +64,7 @@ class MyTextProcessor(TextProcessor):
         )  # Iteratively searches phrase using regex
 
         if result != None:
-            click.secho("Index of found searched phrase:", fg='white', bg='black')
+            click.secho("Index of found searched phrase:", fg="white", bg="black")
             indices = [
                 index.start() for index in result
             ]  # Creates a list of indices for each index in result
@@ -76,7 +76,7 @@ class MyTextProcessor(TextProcessor):
         # Initalize new text object for replaced text
         self.newTxt = re.sub(searchStr, replaceStr, self.text)
 
-        click.secho("New text:\n", fg='green', bg='black')
+        click.secho("New text:\n", fg="green", bg="black")
         click.echo(self.newTxt)
 
     def save(self, path):
@@ -90,8 +90,17 @@ class MyTextProcessor(TextProcessor):
         words = self.text.split(" ")
         words_count = Counter(words).most_common()
         for x in range(limit):
-            click.secho(f"Most frequent word place {x + 1} is: ", fg='white', bg='black', nl=False)
-            click.secho(f"{words_count[x][0]} with {words_count[x][1]} occurrences.", fg='green', bg='black')
+            click.secho(
+                f"Most frequent word place {x + 1} is: ",
+                fg="white",
+                bg="black",
+                nl=False,
+            )
+            click.secho(
+                f"{words_count[x][0]} with {words_count[x][1]} occurrences.",
+                fg="green",
+                bg="black",
+            )
 
     def findPalindromes(self) -> list:
         """Iterates through text to find if the substring is equal to the reverse of the substring."""
@@ -117,10 +126,8 @@ class MyTextProcessor(TextProcessor):
                             palindromes.append(
                                 temp
                             )  # Add the palindromes to list, useful for any future additions.
-                            
-        if (
-            palindromes == []
-        ):  # Check if any palindromes were added to the list
+
+        if palindromes == []:  # Check if any palindromes were added to the list
             raise NoPalindromesError  # Could also catch the error and print the exception instead of raising.
         else:
             return palindromes
@@ -160,7 +167,7 @@ class MyTextProcessor(TextProcessor):
         encryptedString = encryptedString.join(upper)
 
         # Print encrypted string for before/after comparison
-        click.secho(f"Encrypted Message: {encryptedString}", fg='red', bg='black')
+        click.secho(f"Encrypted Message: {encryptedString}", fg="red", bg="black")
 
         decryptedString = ""
 
@@ -179,7 +186,7 @@ class MyTextProcessor(TextProcessor):
             # Add to string
             decryptedString += new_char
 
-        click.secho(f"Secret Message: {decryptedString}", fg='green', bg='black')
+        click.secho(f"Secret Message: {decryptedString}", fg="green", bg="black")
 
 
 def loadApp() -> MyTextProcessor:
@@ -189,6 +196,7 @@ def loadApp() -> MyTextProcessor:
 
     return app
 
+
 @click.group()
 def main():
     """
@@ -197,10 +205,11 @@ def main():
     python docuworksProject.py replace --help\n
     To obtain the help page for the replace command.
     """
-    
+
+
 @main.command("display")
 def display():
-    """ 
+    """
     Displays text.
     """
     app = loadApp()
@@ -209,7 +218,7 @@ def display():
 
 
 @main.command("search")
-@click.argument('searchphrase')
+@click.argument("searchphrase")
 def search(searchphrase):
     """
     Searches text using SEARCHPHRASE, outputs index.\n
@@ -221,9 +230,9 @@ def search(searchphrase):
 
 
 @main.command("replace")
-@click.argument('searchphrase')
-@click.argument('replacephrase')
-@click.option('--save', default=False, help='Save as new file True/False')
+@click.argument("searchphrase")
+@click.argument("replacephrase")
+@click.option("--save", default=False, help="Save as new file True/False")
 def replace(searchphrase, replacephrase, save):
     """
     Search phrase and replace it.
@@ -238,16 +247,15 @@ def replace(searchphrase, replacephrase, save):
     app.replace(searchphrase, replacephrase)
 
     if save:
-        fileName = click.prompt('Please enter a file name', type=str)
+        fileName = click.prompt("Please enter a file name", type=str)
         fileName = fileName + ".txt"
 
         app.save(Path(fileName))
-        click.secho(f"Saved {fileName} succesfully.", fg='green', bg='black')
-
+        click.secho(f"Saved {fileName} succesfully.", fg="green", bg="black")
 
 
 @main.command("common")
-@click.option('--limit', default=5, help='Number of most common words listed')
+@click.option("--limit", default=5, help="Number of most common words listed")
 def commonWords(limit):
     """Finds most commonly used words in text."""
 
@@ -265,6 +273,7 @@ def palindromes():
     palindromes = app.findPalindromes()
     click.echo(palindromes)
 
+
 @main.command("emails")
 def emails():
     """Finds all emails in text."""
@@ -273,6 +282,7 @@ def emails():
 
     app.findEmails()
 
+
 @main.command("secret")
 def secret():
     """Finds secret message in text."""
@@ -280,7 +290,6 @@ def secret():
     app = loadApp()
 
     app.findSecret()
-
 
 
 if __name__ == "__main__":
