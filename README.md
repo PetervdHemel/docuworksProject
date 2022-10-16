@@ -16,7 +16,7 @@ Text editor that performs various functions as follows:
     * Secret message is encoded as mid-word upper case characters.
     * Secret message uses Caesar Cipher with shift 13.
 
-![](img/overview.png)
+![](img/final_overview.png)
 
 ## Installation
 Make sure you have [Python 3](https://www.python.org/downloads/) installed.
