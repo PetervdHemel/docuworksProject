@@ -42,16 +42,22 @@ python -m pip install -r requirements.txt
 ## Documentation
 **Table of Contents**
 
-1. Structure
-2. Menu
-3. MyTextProcessor Examples
+1. Code Structure
+    * Custom Exceptions
+    * MyTextProcessor Class
+    * Menu and LoadApp Functions
+2. Visual Menu
+3. MyTextProcessor Result Examples
 
-**Structure:**
+---
+
+### 1. Code Structure:
 
 The program is divided into three sections:
 
+---
 
-### Custom Exceptions:
+* ### Custom Exceptions:
 ```
 class NoPalindromesError(Exception):
 ```
@@ -73,7 +79,9 @@ def __str__(self):
     return f"The processed string contains no palindromes."
 ```
 
-### MyTextProcessor Class:
+---
+
+* ### MyTextProcessor Class:
 ```
 class MyTextProcessor(TextProcessor):
 ```
@@ -285,3 +293,69 @@ for char in encryptedString:
 ```decryptedString``` is then printed.
 
 ---
+
+* ### Menu and LoadApp Functions
+The main() function consists of structuring the menu into eight options, printed to the console as such:
+```
+click.echo("Please select a Menu Option | (1 - 8): ")
+click.echo("1. Display text")
+click.echo("2. Search phrase")
+click.echo("3. Search & replace")
+click.echo("4. List most common words")
+click.echo("5. List palindromes")
+click.echo("6. List email addresses")
+click.echo("7. Show secret message")
+click.echo("8. Quit program.")
+```
+We then use [```click```](https://click.palletsprojects.com/en/8.1.x/)'s function [```getchar()```](https://click.palletsprojects.com/en/8.1.x/api/?highlight=getchar#click.getchar) to obtain a number input 1-8 from the user. This input is then put through an extensive ```if``` statement to select which function to run:
+```
+if option == "1":
+    display()
+elif option == "2":
+    search()
+```
+and so forth until:
+```
+elif option == "8":
+    sys.exit()
+else:
+    click.clear()
+    click.echo("Invalid option.")
+    click.pause()
+```
+---
+
+```LoadApp()``` is called several times within nested functions of ```main()```. This function simply calls the ```MyTextProcessor``` Class as ```app``` and performs ```app.load()``` function on [text.txt](https://github.com/PetervdHemel/docuworksProject/blob/master/docuworksProject/text.txt):
+```
+app = MyTextProcessor()
+app.load(Path(r"text.txt"))
+```
+```
+return app
+```
+---
+
+The remaining nested functions simply take user input, process it, and call upon ```LoadApp()```, and hence the ```MyTextProcessor``` Class to process user input as seen above.
+
+As an example, the ```commonWords()``` function which is executed when the user input on ```main()``` is ```option == '4'``` loops a user input question of how many of the most used words they would like to see printed onto the console:
+```
+option = "y"
+while option == "y":
+    click.clear()
+    app = loadApp()
+
+    toplimit = input("How many of the most used words should be shown?: ")
+
+    try:
+        toplimit = int(toplimit)
+    except:
+        click.echo("Please enter a valid number.")
+        click.pause()
+    else:
+        app.findCommon(toplimit)
+
+    click.clear()
+    click.echo("Would you like to try again? y/n\n")
+    option = click.getchar()
+```
+> Error management is performed on user input, using ```try``` to ```except``` a non-integer value.
