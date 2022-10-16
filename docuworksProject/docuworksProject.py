@@ -195,6 +195,7 @@ def loadApp() -> MyTextProcessor:
 
 @click.command()
 def main():
+    """"""
     click.clear()
     click.echo("DocuWorks Assessment Text Editor\n")
 

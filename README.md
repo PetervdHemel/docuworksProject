@@ -18,6 +18,8 @@ Text editor that performs various functions as follows:
 ![](img/overview.png)
 
 ## Installation
+Make sure you have [Python 3](https://www.python.org/downloads/) installed.
+
 Create and activate a virtual environment (venv):
 ```sh
 python -m venv venv
@@ -37,6 +39,18 @@ pip3 install -r requirements.txt
 ```
 ```sh
 python -m pip install -r requirements.txt
+```
+
+## Run the Application
+
+**OS X and Linux**
+```sh
+python ./docuworksProject/docuworksProject.py
+```
+
+**Windows**
+```sh
+python .\docuworksProject\docuworksProject.py
 ```
 
 ## Documentation
