@@ -20,7 +20,15 @@ Text editor that performs various functions as follows:
 ## Installation
 Make sure you have [Python 3](https://www.python.org/downloads/) installed.
 
-Create and activate a virtual environment (venv):
+Clone the repository to your directory of choice. If you use [git](https://git-scm.com/downloads) you can follow these commands in order:
+```
+cd [path/to/directory]
+```
+```
+git clone https://github.com/PetervdHemel/docuworksProject.git
+```
+---
+Next up, create and activate a [virtual environment](https://docs.python.org/3/library/venv.html) (venv):
 ```sh
 python -m venv venv
 ```
