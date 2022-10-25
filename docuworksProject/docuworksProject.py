@@ -62,7 +62,7 @@ class TextProcessor(ABC):
 
 class MyTextProcessor(TextProcessor):
     def load(self, path):
-        with click.open_file(path, "r") as file:
+        with click.open_file(path, "r", encoding="UTF-8") as file:
             self.text = file.read()
 
     def display(self):
