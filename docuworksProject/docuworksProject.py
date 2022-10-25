@@ -54,7 +54,7 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_emails(self) -> None:
+    def get_emails(self) -> list[str]:
         raise NotImplementedError
 
     @abstractmethod
@@ -178,7 +178,7 @@ class MyTextProcessor(TextProcessor):
         else:
             return palindromes
 
-    def get_emails(self):
+    def get_emails(self) -> list[str]:
         """
         Uses regular expressions (regex) to extract emails from text.
         Regex lookahead to make sure the sneakily placed fake emails are avoided:
@@ -187,11 +187,10 @@ class MyTextProcessor(TextProcessor):
             r"[a-z0-9\-+_]+[\.(?!\.)]*[a-z0-9\-+_]+@[a-z0-9\-+_]+[\.(?=\.)]*[a-z]+[a-z\.]*",
             self.text,
         )
-        if emails == []:
+        if not emails:
             raise NoEmailAddressesError
         else:
-            for i in range(len(emails)):
-                click.echo(f"Email {i + 1}: {emails[i]}")
+            return emails
 
     def find_secret(self):
         """Finds secret message in text"""
@@ -359,7 +358,10 @@ def emails():
 
     app = load_app()
 
-    app.get_emails()
+    emails = app.get_emails()
+
+    for i in range(len(emails)):
+        click.echo(f"Email {i + 1}: {emails[i]}")
 
 
 @main.command("secret")
