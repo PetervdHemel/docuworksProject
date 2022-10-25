@@ -26,7 +26,7 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def search(self, search_phrase) -> None:
+    def search(self, search_phrase) -> list[tuple[int, int]]:
         raise NotImplementedError
 
     @abstractmethod
@@ -68,21 +68,13 @@ class MyTextProcessor(TextProcessor):
     def display(self):
         click.echo(self.text)
 
-    def search(self, search_phrase):
-        result = re.finditer(
-            search_phrase, self.text
-        )  # Iteratively searches phrase using regex
+    def search(self, search_phrase: str) -> list[tuple[int, int]]:
+        return [
+                (match.span())
+                # Iteratively searches phrase using regex
+                for match in re.finditer(search_phrase, self.text)
+            ]
 
-        indices = [
-            (index.start(), index.end() - 1) for index in result
-        ]  # Creates a list of indices for each index in result
-        if indices == []:
-            click.echo("None found.")
-        else:
-            click.secho(
-                f"Start, stop indices of {search_phrase}:", fg="white", bg="black"
-            )
-            click.echo(indices)
 
     def replace(self, search_string, replace_string):
         # Initalize new text object for replaced text
@@ -285,7 +277,15 @@ def search(searchphrase):
     """
 
     app = load_app()
-    app.search(searchphrase)
+    search_result = app.search(searchphrase)
+
+    if not search_result:
+        click.echoo("None found.")
+    else:
+        click.secho(
+            f"Start, stop indices of {searchphrase}:", fg="white", bg="black"
+        )
+        click.echo(search_result)
 
 
 @main.command("replace")
