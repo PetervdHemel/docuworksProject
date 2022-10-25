@@ -26,7 +26,7 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def iterSearch(self, searchPhrase) -> None:
+    def search(self, searchPhrase) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -38,19 +38,25 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def findCommon(self, limit) -> None:
+    def get_common_words(self, limit) -> None:
+        raise NotImplementedError
+
+    """
+    @abstractmethod
+    def findPalindromes(self) -> list[str]:
+        raise NotImplementedError
+    """
+
+    @abstractmethod
+    def get_palindrome_words(self) -> list[str]:
         raise NotImplementedError
 
     @abstractmethod
-    def findPalindromes(self) -> None:
+    def get_emails(self) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def findPalindromeWords(self) -> None:
-        raise NotImplementedError
-
-    @abstractmethod
-    def findSecret(self) -> None:
+    def find_secret(self) -> None:
         raise NotImplementedError
 
 
@@ -62,7 +68,7 @@ class MyTextProcessor(TextProcessor):
     def display(self):
         click.echo(self.text)
 
-    def iterSearch(self, searchPhrase):
+    def search(self, searchPhrase):
         result = re.finditer(
             searchPhrase, self.text
         )  # Iteratively searches phrase using regex
@@ -91,7 +97,7 @@ class MyTextProcessor(TextProcessor):
             newFile.write(self.newTxt)
             newFile.truncate()
 
-    def findCommon(self, limit):
+    def get_common_words(self, limit):
         """Finds the most common words in text. 'limit' Is the amount of common words shown."""
         words = self.text.split(" ")
         words_count = Counter(words).most_common()
@@ -113,9 +119,11 @@ class MyTextProcessor(TextProcessor):
                 fg="green",
                 bg="black",
             )
+    """
+    Deprecated functionality:
 
-    def findPalindromes(self) -> list:
-        """Iterates through text to find if the substring is equal to the reverse of the substring."""
+    def findPalindromes(self) -> list[str]:
+        Iterates through text to find if the substring is equal to the reverse of the substring.
         # Makes text lower case, removes spaces and removes newline which could be counted as a palindrome character
         string = self.text.lower().replace(" ", "").replace("\n", "")
 
@@ -147,8 +155,9 @@ class MyTextProcessor(TextProcessor):
             raise NoPalindromesError  # Could also catch the error and print the exception instead of raising.
         else:
             return palindromes
+    """
 
-    def findPalindromeWords(self) -> list:
+    def get_palindrome_words(self) -> list[str]:
         """Iterates through each word in the text, to see if it is equal to its reverse equivalent."""
 
         formatText = self.text.lower().replace(
@@ -174,16 +183,16 @@ class MyTextProcessor(TextProcessor):
             length=len(validStrings)
         ) as bar:  # Use click to provide a progress bar
             for i in bar:
-                temp = validStrings[i]
-                if temp == temp[::-1]:
-                    palindromes.append(temp)
+                temp_word = validStrings[i]
+                if temp_word == temp_word[::-1]:
+                    palindromes.append(temp_word)
 
         if palindromes == []:
             raise NoPalindromesError
         else:
             return palindromes
 
-    def findEmails(self):
+    def get_emails(self):
         """
         Uses regular expressions (regex) to extract emails from text.
         Regex lookahead to make sure the sneakily placed fake emails are avoided:
@@ -198,7 +207,7 @@ class MyTextProcessor(TextProcessor):
             for i in range(len(emails)):
                 click.echo(f"Email {i + 1}: {emails[i]}")
 
-    def findSecret(self):
+    def find_secret(self):
         """Finds secret message in text"""
 
         # Find all words in text that have a capitalized letter surrounded by lower case letters.
@@ -215,8 +224,7 @@ class MyTextProcessor(TextProcessor):
 
         # Define the shift for caesar decryption
         shift = 13  # His 'lucky number'
-        encryptedString = ""
-        encryptedString = encryptedString.join(upper)
+        encryptedString = "".join(upper)
 
         # Print encrypted string for before/after comparison
         click.secho(f"Encrypted Message: {encryptedString}", fg="red", bg="black")
@@ -241,7 +249,7 @@ class MyTextProcessor(TextProcessor):
         click.secho(f"Secret Message: {decryptedString}", fg="green", bg="black")
 
 
-def loadApp() -> MyTextProcessor:
+def load_app() -> MyTextProcessor:
     """Calls text processor class and loads the class. Returns class."""
     app = MyTextProcessor()
     app.load(Path(r".\text.txt"))
@@ -264,7 +272,7 @@ def display():
     """
     Displays text.
     """
-    app = loadApp()
+    app = load_app()
 
     app.display()
 
@@ -277,8 +285,8 @@ def search(searchphrase):
     Example: python docuworksProject.py search Tos
     """
 
-    app = loadApp()
-    app.iterSearch(searchphrase)
+    app = load_app()
+    app.search(searchphrase)
 
 
 @main.command("replace")
@@ -295,7 +303,7 @@ def replace(searchphrase, replacephrase, save):
     Example: python docuworksProject.py replace --save True Tos Peter
     """
 
-    app = loadApp()
+    app = load_app()
     app.replace(searchphrase, replacephrase)
 
     if save:
@@ -311,49 +319,52 @@ def replace(searchphrase, replacephrase, save):
 def commonWords(limit):
     """Finds most commonly used words in text."""
 
-    app = loadApp()
+    app = load_app()
 
-    app.findCommon(limit)
+    app.get_common_words(limit)
 
+
+"""
+Deprecated functionality
 
 @main.command("palindromes")
 def palindromes():
-    """Finds all palindrome phrases in text."""
+    Finds all palindrome phrases in text.
 
     app = loadApp()
 
     palindromes = app.findPalindromes()
     click.echo(palindromes)
-
+"""
 
 @main.command("emails")
 def emails():
     """Finds all emails in text."""
 
-    app = loadApp()
+    app = load_app()
 
-    app.findEmails()
+    app.get_emails()
 
 
 @main.command("secret")
 def secret():
     """Finds secret message in text."""
 
-    app = loadApp()
+    app = load_app()
 
-    app.findSecret()
+    app.find_secret()
 
 
-@main.command("palindromeWords")
-def palindromeWords():
+@main.command("palindromes")
+def palindromes():
     """
     Finds all full palindrome words in text.\n
     Differs from 'palindromes' as it only compares full words, regardless of punctuation, not every phrase.
     """
 
-    app = loadApp()
+    app = load_app()
 
-    palindromes = app.findPalindromeWords()
+    palindromes = app.get_palindrome_words()
     click.echo(palindromes)
 
 
