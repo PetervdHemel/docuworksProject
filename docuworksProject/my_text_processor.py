@@ -5,11 +5,11 @@ import re
 
 class MyTextProcessor(TextProcessor):
     def load(self, path):
-        with click.open_file(path, "r", encoding="UTF-8") as file:
+        with open(path, "r", encoding="UTF-8") as file:
             self.text = file.read()
 
     def display(self):
-        click.echo(self.text)
+        return self.text
 
     def search(self, search_phrase: str) -> list[tuple[int, int]]:
         return [
@@ -106,13 +106,10 @@ class MyTextProcessor(TextProcessor):
 
         palindromes = []
 
-        with click.progressbar(
-            length=len(valid_strings)
-        ) as bar:  # Use click to provide a progress bar
-            for i in bar:
-                temp_word = valid_strings[i]
-                if temp_word == temp_word[::-1]:
-                    palindromes.append(temp_word)
+        for i, string in enumerate(valid_strings):
+            temp_word = string
+            if temp_word == temp_word[::-1]:
+                palindromes.append(temp_word)
 
         if palindromes == []:
             raise NoPalindromesError
@@ -133,7 +130,7 @@ class MyTextProcessor(TextProcessor):
         else:
             return emails
 
-    def find_secret(self):
+    def find_secret(self) -> str:
         """Finds secret message in text"""
 
         # Find all words in text that have a capitalized letter surrounded by lower case letters.
@@ -152,9 +149,6 @@ class MyTextProcessor(TextProcessor):
         shift = 13  # His 'lucky number'
         encrypted_string = "".join(upper)
 
-        # Print encrypted string for before/after comparison
-        click.secho(f"Encrypted Message: {encrypted_string}", fg="red", bg="black")
-
         decrypted_string = ""
 
         for char in encrypted_string:
@@ -172,4 +166,4 @@ class MyTextProcessor(TextProcessor):
             # Add to string
             decrypted_string += new_char
 
-        click.secho(f"Secret Message: {decrypted_string}", fg="green", bg="black")
+        return encrypted_string, decrypted_string

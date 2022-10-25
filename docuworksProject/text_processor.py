@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 class TextProcessor(ABC):
     @abstractmethod
@@ -10,11 +11,11 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def search(self, search_phrase) -> list[tuple[int, int]]:
+    def search(self, search_phrase: str) -> list[tuple[int, int]]:
         raise NotImplementedError
 
     @abstractmethod
-    def replace(self, search_string, replace_string) -> None:
+    def replace(self, search_string: str, replace_string: str) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -22,7 +23,7 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_common_words(self, limit) -> list[tuple[str, int]]:
+    def get_common_words(self, limit: bool) -> list[tuple[str, int]]:
         raise NotImplementedError
 
     """
@@ -40,5 +41,5 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def find_secret(self) -> None:
+    def find_secret(self) -> str:
         raise NotImplementedError

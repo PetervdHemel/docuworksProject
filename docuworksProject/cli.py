@@ -28,7 +28,7 @@ def display():
     """
     app = load_app()
 
-    app.display()
+    click.echo(app.display())
 
 
 @main.command("search")
@@ -69,7 +69,7 @@ def replace(searchphrase, replacephrase, save):
     app.replace(searchphrase, replacephrase)
     click.secho("New text:\n", fg="green", bg="black")
 
-    app.display()
+    click.echo(app.display())
 
     if save:
         file_name = click.prompt("Please enter a file name", type=str)
@@ -139,7 +139,11 @@ def secret():
 
     app = load_app()
 
-    app.find_secret()
+    encrypted, decrypted = app.find_secret()
+
+    # Print encrypted string for before/after comparison
+    click.secho(f"Encrypted Message: {encrypted}", fg="red", bg="black")
+    click.secho(f"Secret Message: {decrypted}", fg="green", bg="black")
 
 
 @main.command("palindromes")
