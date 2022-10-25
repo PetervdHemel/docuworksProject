@@ -1,3 +1,4 @@
+from pickle import FALSE
 from typing import Type
 import click
 import sys
@@ -39,7 +40,7 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_common_words(self, limit) -> None:
+    def get_common_words(self, limit) -> list[tuple[str, int]]:
         raise NotImplementedError
 
     """
@@ -83,20 +84,29 @@ class MyTextProcessor(TextProcessor):
         
 
     def save(self, path):
-        with click.open_file(path, "w") as newFile:
-            newFile.seek(0)  # Start at beginning of the file.
-            newFile.write(self.text)
-            newFile.truncate()
+        with click.open_file(path, "w") as new_file:
+            new_file.seek(0)  # Start at beginning of the file.
+            new_file.write(self.text)
+            new_file.truncate()
 
-    def get_common_words(self, limit: int) -> list[tuple[str, int]]:
-        """Finds the most common words in text. 'limit' Is the amount of common words shown."""
-        format_text = self.text.replace(
-            "\n", " ")
+    def format_text(self, set_lower: bool) -> filter:
+        """Fomats input text to remove punctuation, and returns a filter object with filtered words"""
+
+        format_text = self.text.replace("\n", " ")
         format_text = re.sub(r"[^\w\s]", "", format_text) # Remove punctuation
+
+        if set_lower:
+            format_text = format_text.lower()
 
         words = format_text.split(" ")
         # Filter out leftover empty strings:
         words = filter(None, words)
+
+        return words
+
+    def get_common_words(self, limit: int) -> list[tuple[str, int]]:
+        """Finds the most common words in text. 'limit' Is the amount of common words shown."""
+        words = self.format_text(False)
 
         words_count = Counter(words).most_common(limit)
         return words_count
@@ -142,13 +152,7 @@ class MyTextProcessor(TextProcessor):
     def get_palindrome_words(self) -> list[str]:
         """Iterates through each word in the text, to see if it is equal to its reverse equivalent."""
 
-        format_text = self.text.lower().replace(
-            "\n", " "
-        )  # Get rid of new lines and make lower case
-
-        words = list(
-            format_text.split(" ")
-        )  # Split each word in the text into list entries
+        words = self.format_text(True)
 
         valid_words = []
         for word in words:
