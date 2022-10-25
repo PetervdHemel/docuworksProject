@@ -1,3 +1,4 @@
+from typing import Type
 import click
 import sys
 import re
@@ -98,25 +99,8 @@ class MyTextProcessor(TextProcessor):
         words = filter(None, words)
 
         words_count = Counter(words).most_common(limit)
+        return words_count
 
-        for x in range(limit):
-            click.secho(
-                f"Most frequent word place {x + 1} is: ",
-                fg="white",
-                bg="black",
-                nl=False,
-            )
-            click.secho(
-                f"{words_count[x][0]}",
-                fg="red",
-                bg="black",
-                nl=False,
-            )
-            click.secho(
-                f" with {words_count[x][1]} counts.",
-                fg="green",
-                bg="black",
-            )
     """
     Deprecated functionality:
 
@@ -330,7 +314,26 @@ def common_words(limit):
 
     app = load_app()
 
-    app.get_common_words(limit)
+    words_list = app.get_common_words(limit)
+
+    for x in range(limit):
+        click.secho(
+            f"Most frequent word place {x + 1} is: ",
+            fg="white",
+            bg="black",
+            nl=False,
+        )
+        click.secho(
+            f"{words_list[x][0]}",
+            fg="red",
+            bg="black",
+            nl=False,
+        )
+        click.secho(
+            f" with {words_list[x][1]} counts.",
+            fg="green",
+            bg="black",
+        )
 
 
 """
