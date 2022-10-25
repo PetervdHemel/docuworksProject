@@ -54,12 +54,12 @@ python -m pip install -r requirements.txt
 
 **OS X and Linux**
 ```sh
-python ./docuworksProject/docuworksProject.py [OPTIONS] COMMAND [ARGS]...
+python ./docuworksProject/cli.py [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Windows**
 ```sh
-python .\docuworksProject\docuworksProject.py [OPTIONS] COMMAND [ARGS]...
+python .\docuworksProject\cli.py [OPTIONS] COMMAND [ARGS]...
 ```
 
 ## Documentation
