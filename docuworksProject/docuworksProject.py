@@ -26,11 +26,11 @@ class TextProcessor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def search(self, searchPhrase) -> None:
+    def search(self, search_phrase) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def replace(self, searchStr, replaceStr) -> None:
+    def replace(self, search_string, replace_string) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -68,9 +68,9 @@ class MyTextProcessor(TextProcessor):
     def display(self):
         click.echo(self.text)
 
-    def search(self, searchPhrase):
+    def search(self, search_phrase):
         result = re.finditer(
-            searchPhrase, self.text
+            search_phrase, self.text
         )  # Iteratively searches phrase using regex
 
         indices = [
@@ -80,21 +80,20 @@ class MyTextProcessor(TextProcessor):
             click.echo("None found.")
         else:
             click.secho(
-                f"Start, stop indices of {searchPhrase}:", fg="white", bg="black"
+                f"Start, stop indices of {search_phrase}:", fg="white", bg="black"
             )
             click.echo(indices)
 
-    def replace(self, searchStr, replaceStr):
+    def replace(self, search_string, replace_string):
         # Initalize new text object for replaced text
-        self.newTxt = re.sub(searchStr, replaceStr, self.text)
+        self.text = re.sub(search_string, replace_string, self.text)
 
         click.secho("New text:\n", fg="green", bg="black")
-        click.echo(self.newTxt)
 
     def save(self, path):
         with click.open_file(path, "w") as newFile:
             newFile.seek(0)  # Start at beginning of the file.
-            newFile.write(self.newTxt)
+            newFile.write(self.text)
             newFile.truncate()
 
     def get_common_words(self, limit):
@@ -160,30 +159,30 @@ class MyTextProcessor(TextProcessor):
     def get_palindrome_words(self) -> list[str]:
         """Iterates through each word in the text, to see if it is equal to its reverse equivalent."""
 
-        formatText = self.text.lower().replace(
+        format_text = self.text.lower().replace(
             "\n", " "
         )  # Get rid of new lines and make lower case
 
         words = list(
-            formatText.split(" ")
+            format_text.split(" ")
         )  # Split each word in the text into list entries
 
-        validWords = []
+        valid_words = []
         for word in words:
             # Get rid of punctuation
             word = re.sub(r"[^\w\s]", "", word)
-            validWords.append(word)
+            valid_words.append(word)
 
-        # Use list comprehension to store each word into validStrings if it is at least 3 long
-        validStrings = [string for string in validWords if len(string) > 2]
+        # Use list comprehension to store each word into valid_strings if it is at least 3 long
+        valid_strings = [string for string in valid_words if len(string) > 2]
 
         palindromes = []
 
         with click.progressbar(
-            length=len(validStrings)
+            length=len(valid_strings)
         ) as bar:  # Use click to provide a progress bar
             for i in bar:
-                temp_word = validStrings[i]
+                temp_word = valid_strings[i]
                 if temp_word == temp_word[::-1]:
                     palindromes.append(temp_word)
 
@@ -211,11 +210,11 @@ class MyTextProcessor(TextProcessor):
         """Finds secret message in text"""
 
         # Find all words in text that have a capitalized letter surrounded by lower case letters.
-        capitalwords = re.findall(r"[a-z]+[A-Z]+[a-z]+", self.text)
+        capital_words = re.findall(r"[a-z]+[A-Z]+[a-z]+", self.text)
 
-        # Use list comprehension to extract capitalized characters from strings in capitalwords
+        # Use list comprehension to extract capitalized characters from strings in capital_words
         upper = []
-        for word in capitalwords:  # loop through words in list
+        for word in capital_words:  # loop through words in list
             string = ""
             string = [
                 char for char in word if char.isupper()
@@ -224,14 +223,14 @@ class MyTextProcessor(TextProcessor):
 
         # Define the shift for caesar decryption
         shift = 13  # His 'lucky number'
-        encryptedString = "".join(upper)
+        encrypted_string = "".join(upper)
 
         # Print encrypted string for before/after comparison
-        click.secho(f"Encrypted Message: {encryptedString}", fg="red", bg="black")
+        click.secho(f"Encrypted Message: {encrypted_string}", fg="red", bg="black")
 
-        decryptedString = ""
+        decrypted_string = ""
 
-        for char in encryptedString:
+        for char in encrypted_string:
             uni = ord(char)  # Convert character to unicode
             index = uni - ord("A")  # Find index position 0-25
 
@@ -244,9 +243,9 @@ class MyTextProcessor(TextProcessor):
             new_char = chr(new_uni)
 
             # Add to string
-            decryptedString += new_char
+            decrypted_string += new_char
 
-        click.secho(f"Secret Message: {decryptedString}", fg="green", bg="black")
+        click.secho(f"Secret Message: {decrypted_string}", fg="green", bg="black")
 
 
 def load_app() -> MyTextProcessor:
@@ -305,13 +304,14 @@ def replace(searchphrase, replacephrase, save):
 
     app = load_app()
     app.replace(searchphrase, replacephrase)
+    app.display()
 
     if save:
-        fileName = click.prompt("Please enter a file name", type=str)
-        fileName = fileName + ".txt"
+        file_name = click.prompt("Please enter a file name", type=str)
+        file_name = file_name + ".txt"
 
-        app.save(Path(fileName))
-        click.secho(f"Saved {fileName} succesfully.", fg="green", bg="black")
+        app.save(Path(file_name))
+        click.secho(f"Saved {file_name} succesfully.", fg="green", bg="black")
 
 
 @main.command("common")
