@@ -79,8 +79,7 @@ class MyTextProcessor(TextProcessor):
     def replace(self, search_string, replace_string):
         # Initalize new text object for replaced text
         self.text = re.sub(search_string, replace_string, self.text)
-
-        click.secho("New text:\n", fg="green", bg="black")
+        
 
     def save(self, path):
         with click.open_file(path, "w") as newFile:
@@ -304,6 +303,8 @@ def replace(searchphrase, replacephrase, save):
 
     app = load_app()
     app.replace(searchphrase, replacephrase)
+    click.secho("New text:\n", fg="green", bg="black")
+
     app.display()
 
     if save:
