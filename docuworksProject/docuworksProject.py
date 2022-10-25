@@ -87,10 +87,18 @@ class MyTextProcessor(TextProcessor):
             newFile.write(self.text)
             newFile.truncate()
 
-    def get_common_words(self, limit):
+    def get_common_words(self, limit: int) -> list[tuple[str, int]]:
         """Finds the most common words in text. 'limit' Is the amount of common words shown."""
-        words = self.text.split(" ")
-        words_count = Counter(words).most_common()
+        format_text = self.text.replace(
+            "\n", " ")
+        format_text = re.sub(r"[^\w\s]", "", format_text) # Remove punctuation
+
+        words = format_text.split(" ")
+        # Filter out leftover empty strings:
+        words = filter(None, words)
+
+        words_count = Counter(words).most_common(limit)
+
         for x in range(limit):
             click.secho(
                 f"Most frequent word place {x + 1} is: ",
@@ -317,7 +325,7 @@ def replace(searchphrase, replacephrase, save):
 
 @main.command("common")
 @click.option("--limit", default=5, help="Number of most common words listed")
-def commonWords(limit):
+def common_words(limit):
     """Finds most commonly used words in text."""
 
     app = load_app()
