@@ -4,11 +4,11 @@ from exceptions import NoPalindromesError, NoEmailAddressesError
 import re
 
 class MyTextProcessor(TextProcessor):
-    def load(self, path):
+    def load(self, path) -> None:
         with open(path, "r", encoding="UTF-8") as file:
             self.text = file.read()
 
-    def display(self):
+    def display(self) -> str:
         return self.text
 
     def search(self, search_phrase: str) -> list[tuple[int, int]]:
@@ -19,12 +19,12 @@ class MyTextProcessor(TextProcessor):
             ]
 
 
-    def replace(self, search_string, replace_string):
+    def replace(self, search_string, replace_string) -> None:
         # Initalize new text object for replaced text
         self.text = re.sub(search_string, replace_string, self.text)
         
 
-    def save(self, path):
+    def save(self, path) -> None:
         with open(path, "w") as new_file:
             new_file.seek(0)  # Start at beginning of the file.
             new_file.write(self.text)

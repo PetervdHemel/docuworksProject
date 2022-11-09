@@ -43,7 +43,7 @@ def search(searchphrase):
     search_result = app.search(searchphrase)
 
     if not search_result:
-        click.echoo("None found.")
+        click.echo("None found.")
     else:
         click.secho(
             f"Start, stop indices of {searchphrase}:", fg="white", bg="black"
