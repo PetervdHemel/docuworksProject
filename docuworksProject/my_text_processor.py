@@ -25,7 +25,7 @@ class MyTextProcessor(TextProcessor):
         
 
     def save(self, path):
-        with click.open_file(path, "w") as new_file:
+        with open(path, "w") as new_file:
             new_file.seek(0)  # Start at beginning of the file.
             new_file.write(self.text)
             new_file.truncate()
