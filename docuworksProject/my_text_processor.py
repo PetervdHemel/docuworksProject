@@ -130,7 +130,7 @@ class MyTextProcessor(TextProcessor):
         else:
             return emails
 
-    def find_secret(self) -> str:
+    def find_secret(self) -> tuple:
         """Finds secret message in text"""
 
         # Find all words in text that have a capitalized letter surrounded by lower case letters.
